@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public AdminController(UserService userService) {
+        this.userService = userService;
+    }
 
     // Teacher Dashboard
     @GetMapping
