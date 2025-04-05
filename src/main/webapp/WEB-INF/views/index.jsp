@@ -2,6 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <h2>Course Materials</h2>
+<h2>Login</h2>
+<a href="/user/login" class="btn btn-success">Login</a>
 <div class="row">
     <c:forEach items="${courses}" var="course">
         <div class="col-md-4 mb-3">
@@ -44,4 +46,10 @@
         <a href="/course/add" class="btn btn-success">Add New Course</a>
         <a href="/poll/add" class="btn btn-success">Add New Poll</a>
     </div>
+</c:if>
+
+<c:if test="${not empty sessionScope.currentUser}">
+    <li class="nav-item">
+        <a class="nav-link" href="<c:url value='/user/logout'/>">Logout</a>
+    </li>
 </c:if>

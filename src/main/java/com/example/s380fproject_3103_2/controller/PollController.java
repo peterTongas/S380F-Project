@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class PollController {
     @Autowired
     private PollService pollService;
-//test
+
     // View Poll
     @GetMapping("/{id}")
     public String viewPoll(@PathVariable Long id, Model model) {

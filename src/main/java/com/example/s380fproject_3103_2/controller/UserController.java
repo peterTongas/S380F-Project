@@ -50,7 +50,7 @@ public class UserController {
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/";
+        return "redirect:/?logout=true";
     }
 
     // Student Profile Edit Form

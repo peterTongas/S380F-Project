@@ -18,6 +18,11 @@
             </ul>
             <ul class="navbar-nav">
                 <c:choose>
+                    <c:if test="${not empty sessionScope.currentUser}">
+                        <li class="nav-item">
+                            <a class="nav-link" href="<c:url value='/user/logout'/>">Logout</a>
+                        </li>
+                    </c:if>
                     <c:when test="${not empty sessionScope.currentUser}">
                         <li class="nav-item">
                             <span class="nav-link">Welcome, ${currentUser.fullName}!</span>
@@ -51,7 +56,6 @@
 <div class="container mt-4">
     <jsp:include page="${contentPage}" />
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
