@@ -14,30 +14,33 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
     // Registration Form
     @GetMapping("/register")
-    public String registerForm(Model model) {
+    public String showRegistrationForm(Model model) {
         model.addAttribute("user", new User());
-        return "user/register";
+        model.addAttribute("contentPage", "user/register.jsp");
+        return "layout";
     }
 
-    // Submit Registration
+    // Process Registration
     @PostMapping("/register")
-    public String registerSubmit(@ModelAttribute User user) {
+    public String processRegistration(@ModelAttribute User user) {
         userService.registerUser(user);
         return "redirect:/user/login";
     }
 
     // Login Form
     @GetMapping("/login")
-    public String loginForm() {
-        return "user/login";
+    public String showLoginForm(Model model) {
+        model.addAttribute("contentPage", "user/login.jsp");
+        return "layout";
     }
 
-    // Submit Login
+    // Process Login
     @PostMapping("/login")
-    public String loginSubmit(String username, String password, HttpSession session) {
+    public String processLogin(@RequestParam String username,
+                               @RequestParam String password,
+                               HttpSession session) {
         User user = userService.login(username, password);
         if (user != null) {
             session.setAttribute("currentUser", user);
@@ -50,26 +53,29 @@ public class UserController {
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/?logout=true";
+        return "redirect:/";
     }
 
-    // Student Profile Edit Form
+    // Profile Page
     @GetMapping("/profile")
-    public String profileForm(HttpSession session, Model model) {
+    public String showProfile(HttpSession session, Model model) {
         User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser == null) return "redirect:/user/login";
+
         model.addAttribute("user", currentUser);
-        return "user/profile";
+        model.addAttribute("contentPage", "user/profile.jsp");
+        return "layout";
     }
 
-    // Submit Profile Updates
+    // Update Profile
     @PostMapping("/profile")
-    public String profileUpdate(@ModelAttribute User updatedUser, HttpSession session) {
+    public String updateProfile(@ModelAttribute User updatedUser,
+                                HttpSession session) {
         User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser != null) {
-            userService.updateStudentProfile(currentUser.getUsername(), updatedUser);
+            userService.updateUserProfile(currentUser.getUsername(), updatedUser);
             session.setAttribute("currentUser",
-                    userService.login(currentUser.getUsername(), currentUser.getPassword()));
+                    userService.getUserByUsername(currentUser.getUsername()));
         }
         return "redirect:/user/profile";
     }

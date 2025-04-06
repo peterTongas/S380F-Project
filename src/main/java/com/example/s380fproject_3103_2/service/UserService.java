@@ -7,41 +7,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    // Register a new user (default role: STUDENT)
     public User registerUser(User user) {
         user.setRole(UserRole.STUDENT); // Default role
         return userRepository.save(user);
     }
 
-    // Login (temporary, replace with Spring Security later)
     public User login(String username, String password) {
-        Optional<User> user = userRepository.findById(username);
-        return user.filter(u -> u.getPassword().equals(password)).orElse(null);
+        return userRepository.findByUsernameAndPassword(username, password);
     }
 
-    // Update student profile (username cannot be changed)
-    public User updateStudentProfile(String username, User updatedUser) {
-        return userRepository.findById(username)
-                .map(user -> {
-                    if (user.getRole() == UserRole.STUDENT) {
-                        user.setFullName(updatedUser.getFullName());
-                        user.setEmail(updatedUser.getEmail());
-                        user.setPhone(updatedUser.getPhone());
-                        return userRepository.save(user);
-                    }
-                    return null; // Only students can update profiles
-                })
-                .orElse(null);
+    public User updateUserProfile(String username, User updatedUser) {
+        return userRepository.findById(username).map(user -> {
+            user.setFullName(updatedUser.getFullName());
+            user.setEmail(updatedUser.getEmail());
+            user.setPhone(updatedUser.getPhone());
+            // Password update would be handled separately
+            return userRepository.save(user);
+        }).orElse(null);
     }
 
-    // Teacher-only: Get all users
+    public User getUserByUsername(String username) {
+        return userRepository.findById(username).orElse(null);
+    }
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
@@ -57,5 +51,4 @@ public class UserService {
                 })
                 .orElse(null);
     }
-
 }
