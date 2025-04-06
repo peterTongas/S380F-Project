@@ -26,6 +26,11 @@
         <div class="card-body">
             <h5 class="card-title">${poll.question}</h5>
             <a href="/poll/${poll.id}" class="btn btn-primary">View Poll</a>
+            <c:if test="${not empty sessionScope.currentUser && sessionScope.currentUser.role == 'TEACHER'}">
+                <form action="/poll/delete/${poll.id}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </c:if>
         </div>
     </div>
 </c:forEach>

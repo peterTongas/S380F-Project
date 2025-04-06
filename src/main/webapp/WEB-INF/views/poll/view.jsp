@@ -14,7 +14,9 @@
         </c:forEach>
     </div>
 
-    <button type="submit" class="btn btn-primary">Submit Vote</button>
+    <c:if test="${not empty sessionScope.currentUser}">
+        <button type="submit" class="btn btn-primary">Submit Vote</button>
+    </c:if>
 </form>
 
 <h3 class="mt-4">Comments</h3>

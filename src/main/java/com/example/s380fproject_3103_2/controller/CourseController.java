@@ -17,13 +17,6 @@ public class CourseController {
     @Autowired
     private CourseService courseService;
 
-    // 1. Fixed endpoint consistency
-    @GetMapping("")  // Changed from "/courses" to "" to match base /course mapping
-    public String showCourses(Model model) {
-        model.addAttribute("courses", courseService.getAllCourses()); // Added data
-        return "course/list"; // Changed to direct view (not using layout.jsp injection)
-    }
-
     @GetMapping("/{id}")
     public String viewCourse(@PathVariable Long id, Model model, HttpSession session) {
         model.addAttribute("course", courseService.getCourseById(id));
@@ -33,12 +26,11 @@ public class CourseController {
     }
 
     @GetMapping("/add")
-    public String showAddForm(Model model, HttpSession session) {
+    public String addCourseForm(HttpSession session, Model model) {
         User currentUser = (User) session.getAttribute("currentUser");
-        if (currentUser == null || !currentUser.getRole().equals("TEACHER")) {
+        if (currentUser == null || currentUser.getRole() != UserRole.TEACHER) {
             return "redirect:/";
         }
-
         model.addAttribute("course", new CourseMaterial());
         model.addAttribute("contentPage", "course/add.jsp");
         model.addAttribute("pageTitle", "Add New Course");
@@ -48,7 +40,7 @@ public class CourseController {
     @PostMapping("/add")
     public String addCourse(@ModelAttribute CourseMaterial course, HttpSession session) {
         User currentUser = (User) session.getAttribute("currentUser");
-        if (currentUser != null && currentUser.getRole().equals("TEACHER")) {
+        if (currentUser != null && currentUser.getRole() == UserRole.TEACHER) {
             courseService.saveCourse(course);
         }
         return "redirect:/";
@@ -57,7 +49,7 @@ public class CourseController {
     @PostMapping("/delete/{id}")
     public String deleteCourse(@PathVariable Long id, HttpSession session) {
         User currentUser = (User) session.getAttribute("currentUser");
-        if (currentUser != null && currentUser.getRole().equals("TEACHER")) {
+        if (currentUser != null && currentUser.getRole() == UserRole.TEACHER) {
             courseService.deleteCourse(id);
         }
         return "redirect:/";
