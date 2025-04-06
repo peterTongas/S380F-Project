@@ -12,19 +12,16 @@ public class PollService {
     @Autowired
     private PollRepository pollRepository;
 
-    // Get all polls (for index page)
     public List<Poll> getAllPolls() {
         return pollRepository.findAll();
     }
 
-    // Get a specific poll by ID
     public Poll getPollById(Long id) {
-        return pollRepository.findById(id).orElse(null);
+        return pollRepository.findPollWithOptions(id);
     }
 
-    // Vote for a poll option
     public void voteForOption(Long pollId, int optionIndex) {
-        Poll poll = pollRepository.findById(pollId).orElse(null);
+        Poll poll = pollRepository.findPollWithOptions(pollId);
         if (poll != null && optionIndex >= 0 && optionIndex < poll.getOptions().size()) {
             PollOption option = poll.getOptions().get(optionIndex);
             option.setVoteCount(option.getVoteCount() + 1);
@@ -32,12 +29,12 @@ public class PollService {
         }
     }
 
-    // Teacher-only: Add new poll
     public Poll addPoll(Poll poll) {
+        // Set bi-directional relationship
+        poll.getOptions().forEach(option -> option.setPoll(poll));
         return pollRepository.save(poll);
     }
 
-    // Teacher-only: Delete poll
     public void deletePoll(Long id) {
         pollRepository.deleteById(id);
     }

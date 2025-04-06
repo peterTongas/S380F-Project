@@ -2,47 +2,36 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <h2>${poll.question}</h2>
+
 <form action="/poll/vote/${poll.id}" method="post">
-    <c:forEach items="${poll.options}" var="option" varStatus="loop">
-        <div class="form-check mb-2">
-            <input class="form-check-input" type="radio" name="optionIndex"
-                   id="option${loop.index}" value="${loop.index}">
-            <label class="form-check-label" for="option${loop.index}">
+    <div class="list-group mb-3">
+        <c:forEach items="${poll.options}" var="option" varStatus="loop">
+            <label class="list-group-item">
+                <input class="form-check-input me-1" type="radio"
+                       name="optionIndex" value="${loop.index}">
                     ${option.text} (Votes: ${option.voteCount})
             </label>
-        </div>
-    </c:forEach>
-    <c:if test="${not empty sessionScope.currentUser}">
-        <button type="submit" class="btn btn-primary">Submit Vote</button>
-    </c:if>
+        </c:forEach>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit Vote</button>
 </form>
-<!-- Display comments -->
-<h3>Comments</h3>
-<c:forEach var="comment" items="${poll.comments}">
-    <div>
-        <strong>${comment.user.fullName}</strong>: ${comment.content}
-        <c:if test="${isTeacher}">
-            <form action="/comment/delete/${comment.id}" method="post">
-                <button type="submit">Delete</button>
-            </form>
-        </c:if>
+
+<h3 class="mt-4">Comments</h3>
+<c:forEach items="${poll.comments}" var="comment">
+    <div class="card mb-2">
+        <div class="card-body">
+            <h5 class="card-title">${comment.user.fullName}</h5>
+            <p class="card-text">${comment.content}</p>
+        </div>
     </div>
 </c:forEach>
 
-<!-- Add comment form -->
-<h3>Add a Comment</h3>
-<form action="/comment/poll/${poll.id}" method="post">
-    <textarea name="content" placeholder="Write a comment..." required></textarea>
-    <button type="submit">Submit</button>
-</form>
-<%--<h3 class="mt-4">Comments</h3>--%>
-<%--<!-- Similar comment section as course/view.jsp -->--%>
-<%--<c:if test="${sessionScope.currentUser.role == 'TEACHER'}">--%>
-<%--    <form action="<c:url value='/poll/delete/${poll.id}'/>" method="post" class="mt-3">--%>
-<%--        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>--%>
-<%--        <button type="submit" class="btn btn-danger"--%>
-<%--                onclick="return confirm('Are you sure you want to delete this poll?')">--%>
-<%--            Delete Poll--%>
-<%--        </button>--%>
-<%--    </form>--%>
-<%--</c:if>--%>
+<c:if test="${not empty sessionScope.currentUser}">
+    <form action="/comment/add/poll/${poll.id}" method="post" class="mt-3">
+        <div class="mb-3">
+            <textarea name="content" class="form-control" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Comment</button>
+    </form>
+</c:if>

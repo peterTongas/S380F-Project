@@ -3,14 +3,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Online Course Website</title>
+    <title><c:out value="${pageTitle}" default="Online Course Website"/></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
         <a class="navbar-brand" href="/">Course Website</a>
-        <div class="collapse navbar-collapse">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="/">Home</a>
@@ -18,11 +21,6 @@
             </ul>
             <ul class="navbar-nav">
                 <c:choose>
-                    <c:if test="${not empty sessionScope.currentUser}">
-                        <li class="nav-item">
-                            <a class="nav-link" href="<c:url value='/user/logout'/>">Logout</a>
-                        </li>
-                    </c:if>
                     <c:when test="${not empty sessionScope.currentUser}">
                         <li class="nav-item">
                             <span class="nav-link">Welcome, ${currentUser.fullName}!</span>
@@ -54,8 +52,10 @@
 </nav>
 
 <div class="container mt-4">
-    <jsp:include page="${contentPage}" />
+    <%-- Main content will be inserted here --%>
+    <jsp:include page="${contentPage}"/>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

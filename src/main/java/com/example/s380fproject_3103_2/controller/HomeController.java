@@ -1,7 +1,5 @@
 package com.example.s380fproject_3103_2.controller;
 
-import com.example.s380fproject_3103_2.model.CourseMaterial;
-import com.example.s380fproject_3103_2.model.Poll;
 import com.example.s380fproject_3103_2.service.CourseService;
 import com.example.s380fproject_3103_2.service.PollService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +18,8 @@ public class HomeController {
     public String index(Model model) {
         model.addAttribute("courses", courseService.getAllCourses());
         model.addAttribute("polls", pollService.getAllPolls());
-        return "index";
+        model.addAttribute("pageTitle", "Course Homepage");
+        model.addAttribute("contentPage", "index.jsp"); // Key addition
+        return "layout";
     }
 }

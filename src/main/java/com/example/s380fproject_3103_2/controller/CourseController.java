@@ -24,59 +24,43 @@ public class CourseController {
         return "course/list"; // Changed to direct view (not using layout.jsp injection)
     }
 
-    // 2. Added model attribute for view course
     @GetMapping("/{id}")
     public String viewCourse(@PathVariable Long id, Model model, HttpSession session) {
-        CourseMaterial course = courseService.getCourseById(id);
-        if (course == null) {
-            return "redirect:/course"; // Handle non-existent courses
-        }
-
-        model.addAttribute("course", course);
-        model.addAttribute("isTeacher",
-                ((User) session.getAttribute("currentUser")).getRole() == UserRole.TEACHER);
-        return "course/view";
+        model.addAttribute("course", courseService.getCourseById(id));
+        model.addAttribute("contentPage", "course/view.jsp");
+        model.addAttribute("pageTitle", "Course Details");
+        return "layout";
     }
 
-    // 3. Added redirect attributes for feedback
     @GetMapping("/add")
-    public String addCourseForm(HttpSession session, Model model) {
+    public String showAddForm(Model model, HttpSession session) {
         User currentUser = (User) session.getAttribute("currentUser");
-        if (!isTeacher(currentUser)) {
-            return "redirect:/course?error=unauthorized";
+        if (currentUser == null || !currentUser.getRole().equals("TEACHER")) {
+            return "redirect:/";
         }
+
         model.addAttribute("course", new CourseMaterial());
-        return "course/add";
+        model.addAttribute("contentPage", "course/add.jsp");
+        model.addAttribute("pageTitle", "Add New Course");
+        return "layout";
     }
 
-    // 4. Added validation and success message
     @PostMapping("/add")
-    public String addCourseSubmit(@ModelAttribute CourseMaterial course,
-                                  HttpSession session) {
+    public String addCourse(@ModelAttribute CourseMaterial course, HttpSession session) {
         User currentUser = (User) session.getAttribute("currentUser");
-        if (!isTeacher(currentUser)) {
-            return "redirect:/course?error=unauthorized";
+        if (currentUser != null && currentUser.getRole().equals("TEACHER")) {
+            courseService.saveCourse(course);
         }
-
-        if (course.getTitle() == null || course.getTitle().isBlank()) {
-            return "redirect:/course/add?error=title_required";
-        }
-
-        courseService.addCourse(course);
-        return "redirect:/course?success=course_added";
+        return "redirect:/";
     }
 
-    // 5. Added CSRF protection note
     @PostMapping("/delete/{id}")
-    public String deleteCourse(@PathVariable Long id,
-                               HttpSession session) {
+    public String deleteCourse(@PathVariable Long id, HttpSession session) {
         User currentUser = (User) session.getAttribute("currentUser");
-        if (!isTeacher(currentUser)) {
-            return "redirect:/course?error=unauthorized";
+        if (currentUser != null && currentUser.getRole().equals("TEACHER")) {
+            courseService.deleteCourse(id);
         }
-
-        courseService.deleteCourse(id);
-        return "redirect:/course?success=course_deleted";
+        return "redirect:/";
     }
 
     // Helper method for role checking
