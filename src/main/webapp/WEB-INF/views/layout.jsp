@@ -5,16 +5,6 @@
 <head>
     <title><c:out value="${pageTitle}" default="Online Course Website"/></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .form-container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f9fa;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-    </style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -45,6 +35,16 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/user/logout">Logout</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="historyDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                My History
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="historyDropdown">
+                                <li><a class="dropdown-item" href="/user/vote-history">Voting History</a></li>
+                                <li><a class="dropdown-item" href="/user/comment-history">Comment History</a></li>
+                            </ul>
                         </li>
                     </c:when>
                     <c:otherwise>
