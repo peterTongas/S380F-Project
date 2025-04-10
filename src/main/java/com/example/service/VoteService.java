@@ -1,1 +1,1 @@
-// This file has been removed as it duplicates the VoteService class under the correct package name.
+// 刪除此檔案
