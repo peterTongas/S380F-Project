@@ -3,9 +3,11 @@ package com.example.s380fproject_3103_2.service;
 import com.example.s380fproject_3103_2.model.User;
 import com.example.s380fproject_3103_2.model.UserRole;
 import com.example.s380fproject_3103_2.repository.UserRepository;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -50,5 +52,15 @@ public class UserService {
                     return userRepository.save(updatedUser);
                 })
                 .orElse(null);
+    }
+
+    @Transactional
+    public User getUserWithVotedOptions(Long userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user != null) {
+            // 強制初始化集合
+            Hibernate.initialize(user.getVotedOptions());
+        }
+        return user;
     }
 }

@@ -24,7 +24,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Comment> comments;
 
-    @ManyToMany(mappedBy = "votes")
+    @ManyToMany(mappedBy = "votes", fetch = FetchType.EAGER)
     private Set<PollOption> votedOptions = new HashSet<>();
 
     public String getUsername() {
