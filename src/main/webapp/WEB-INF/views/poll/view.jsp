@@ -3,6 +3,10 @@
 
 <h2>${poll.question}</h2>
 
+<c:if test="${not empty error}">
+    <div class="alert alert-danger">${error}</div>
+</c:if>
+
 <c:choose>
     <c:when test="${empty sessionScope.currentUser}">
         <div class="alert alert-warning">請登入後參與投票</div>

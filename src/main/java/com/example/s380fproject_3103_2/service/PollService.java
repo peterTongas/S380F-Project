@@ -30,17 +30,32 @@ public class PollService {
 
     @Transactional
     public void voteForOption(Long pollId, int optionIndex, User user) {
-        // 檢查使用者是否已經投過票
-        if (user == null || hasUserVotedForPoll(user.getUsername(), pollId)) {
-            return; // 已投過票或未登入，不允許投票
-        }
+        try {
+            // 檢查使用者是否已經投過票
+            if (user == null || hasUserVotedForPoll(user.getUsername(), pollId)) {
+                return; // 已投過票或未登入，不允許投票
+            }
 
-        Poll poll = pollRepository.findPollWithOptions(pollId);
-        if (poll != null && optionIndex >= 0 && optionIndex < poll.getOptions().size()) {
-            PollOption option = poll.getOptions().get(optionIndex);
-            option.setVoteCount(option.getVoteCount() + 1);
-            option.getVotes().add(user); // 記錄用戶投票
-            pollRepository.save(poll);
+            Poll poll = pollRepository.findPollWithOptionsAndVotes(pollId);
+            if (poll != null && poll.getOptions() != null && optionIndex >= 0 && optionIndex < poll.getOptions().size()) {
+                PollOption option = poll.getOptions().get(optionIndex);
+                option.setVoteCount(option.getVoteCount() + 1);
+                
+                // 確保 votes 集合已初始化
+                if (option.getVotes() == null) {
+                    throw new RuntimeException("Votes collection is not initialized for option: " + option.getId());
+                }
+                
+                option.getVotes().add(user); // 記錄用戶投票
+                pollRepository.save(poll);
+            } else {
+                throw new RuntimeException("Invalid poll or option index: Poll ID=" + pollId + ", Option Index=" + optionIndex);
+            }
+        } catch (Exception e) {
+            // 記錄錯誤
+            System.err.println("Error in voteForOption: " + e.getMessage());
+            e.printStackTrace();
+            throw e; // 重新拋出以便控制器捕獲
         }
     }
 

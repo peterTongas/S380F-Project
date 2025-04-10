@@ -40,15 +40,25 @@ public class PollController {
     }
 
     @PostMapping("/vote/{pollId}")
-    public String vote(@PathVariable Long pollId, @RequestParam int optionIndex, HttpSession session) {
-        User currentUser = (User) session.getAttribute("currentUser");
-        if (currentUser != null) {
-            // 檢查用戶是否已投票
-            if (!pollService.hasUserVotedForPoll(currentUser.getUsername(), pollId)) {
-                pollService.voteForOption(pollId, optionIndex, currentUser);
+    public String vote(@PathVariable Long pollId, @RequestParam int optionIndex, HttpSession session, Model model) {
+        try {
+            User currentUser = (User) session.getAttribute("currentUser");
+            if (currentUser != null) {
+                // 檢查用戶是否已投票
+                if (!pollService.hasUserVotedForPoll(currentUser.getUsername(), pollId)) {
+                    pollService.voteForOption(pollId, optionIndex, currentUser);
+                }
+            } else {
+                // 用戶未登入
+                model.addAttribute("error", "請先登入後再投票");
+                return viewPoll(pollId, model, session);
             }
+            return "redirect:/poll/" + pollId;
+        } catch (Exception e) {
+            // 處理異常
+            model.addAttribute("error", "投票過程中發生錯誤: " + e.getMessage());
+            return viewPoll(pollId, model, session);
         }
-        return "redirect:/poll/" + pollId;
     }
 
     @GetMapping("/add")
