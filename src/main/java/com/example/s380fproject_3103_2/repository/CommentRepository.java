@@ -9,9 +9,19 @@ import java.util.List;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    @Query("SELECT c FROM Comment c WHERE c.courseMaterial.id = :courseId ORDER BY c.id DESC")
+    // Find all comments by a specific user (sorted by newest first)
+    @Query("SELECT c FROM Comment c WHERE c.user.username = :username ORDER BY c.createdAt DESC")
+    List<Comment> findByUserUsernameOrderByCreatedAtDesc(@Param("username") String username);
+
+    // Find comments on a specific course material
+    @Query("SELECT c FROM Comment c WHERE c.courseMaterial.id = :courseId ORDER BY c.createdAt DESC")
     List<Comment> findByCourseMaterialId(@Param("courseId") Long courseId);
 
-    @Query("SELECT c FROM Comment c WHERE c.poll.id = :pollId ORDER BY c.id DESC")
+    // Find comments on a specific poll
+    @Query("SELECT c FROM Comment c WHERE c.poll.id = :pollId ORDER BY c.createdAt DESC")
     List<Comment> findByPollId(@Param("pollId") Long pollId);
+
+    // Find comments containing specific text (for future search functionality)
+    @Query("SELECT c FROM Comment c WHERE c.content LIKE %:searchTerm%")
+    List<Comment> searchByContent(@Param("searchTerm") String searchTerm);
 }

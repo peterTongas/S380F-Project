@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @Entity
@@ -15,8 +16,9 @@ public class Comment {
 
     private String content;
 
+    @Column(name = "created_at")
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    private Date createdAt;
 
     @ManyToOne
     @JoinColumn(name = "user_username")
@@ -46,11 +48,11 @@ public class Comment {
         this.content = content;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 

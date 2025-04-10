@@ -2,6 +2,9 @@ package com.example.s380fproject_3103_2.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -18,6 +21,10 @@ public class Poll {
 
     @OneToMany(mappedBy = "poll", cascade = CascadeType.ALL)
     private List<Comment> comments;
+
+    @Column(name = "created_at")
+    @CreationTimestamp
+    private Date createdAt;
 
     public Long getId() {
         return id;
@@ -49,5 +56,13 @@ public class Poll {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 }

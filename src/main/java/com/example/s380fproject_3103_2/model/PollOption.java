@@ -3,6 +3,9 @@ package com.example.s380fproject_3103_2.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "POLL_OPTIONS")
 @Data
@@ -15,6 +18,13 @@ public class PollOption {
 
     @ManyToOne
     private Poll poll;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_votes",
+            joinColumns = @JoinColumn(name = "option_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_username"))
+    private Set<User> votes = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -46,5 +56,13 @@ public class PollOption {
 
     public void setPoll(Poll poll) {
         this.poll = poll;
+    }
+
+    public Set<User> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(Set<User> votes) {
+        this.votes = votes;
     }
 }

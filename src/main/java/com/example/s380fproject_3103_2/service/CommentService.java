@@ -5,6 +5,8 @@ import com.example.s380fproject_3103_2.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CommentService {
     @Autowired
@@ -28,5 +30,9 @@ public class CommentService {
 
     public void deleteComment(Long commentId) {
         commentRepository.deleteById(commentId);
+    }
+
+    public List<Comment> getUserComments(String username) {
+        return commentRepository.findByUserUsernameOrderByCreatedAtDesc(username);
     }
 }

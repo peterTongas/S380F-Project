@@ -6,6 +6,7 @@ import com.example.s380fproject_3103_2.repository.PollRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PollService {
@@ -38,4 +39,18 @@ public class PollService {
     public void deletePoll(Long id) {
         pollRepository.deleteById(id);
     }
+
+    public List<Map<String, Object>> getVoteHistory(String username) {
+        return pollRepository.findVoteHistoryByUsername(username);
+    }
+
+//    // For recording votes
+//    public void recordVote(String username, Long optionId) {
+//        pollOptionRepository.findById(optionId).ifPresent(option -> {
+//            User user = userRepository.findById(username).orElseThrow();
+//            option.getVotes().add(user);
+//            option.setVoteCount(option.getVoteCount() + 1);
+//            pollOptionRepository.save(option);
+//        });
+//    }
 }

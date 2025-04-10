@@ -2,7 +2,10 @@ package com.example.s380fproject_3103_2.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "APP_USERS")
@@ -20,6 +23,9 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Comment> comments;
+
+    @ManyToMany(mappedBy = "votes")
+    private Set<PollOption> votedOptions = new HashSet<>();
 
     public String getUsername() {
         return username;
@@ -75,5 +81,13 @@ public class User {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public Set<PollOption> getVotedOptions() {
+        return votedOptions;
+    }
+
+    public void setVotedOptions(Set<PollOption> votedOptions) {
+        this.votedOptions = votedOptions;
     }
 }
