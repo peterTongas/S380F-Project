@@ -55,8 +55,8 @@ public class UserService {
     }
 
     @Transactional
-    public User getUserWithVotedOptions(Long userId) {
-        User user = userRepository.findById(userId).orElse(null);
+    public User getUserWithVotedOptions(String username) {
+        User user = userRepository.findById(username).orElse(null);
         if (user != null) {
             // 強制初始化集合
             Hibernate.initialize(user.getVotedOptions());
