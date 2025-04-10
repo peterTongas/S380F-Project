@@ -12,43 +12,41 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-    private final UserService userService;
 
-    public AdminController(UserService userService) {
-        this.userService = userService;
-    }
+    @Autowired
+    private UserService userService;
 
-    // Teacher Dashboard
     @GetMapping
-    public String adminDashboard(HttpSession session, Model model) {
+    public String dashboard(HttpSession session, Model model) {
         User currentUser = (User) session.getAttribute("currentUser");
-        if (currentUser == null || currentUser.getRole() != UserRole.TEACHER)
+        if (currentUser == null || currentUser.getRole() != UserRole.TEACHER) {
             return "redirect:/";
-
+        }
         model.addAttribute("users", userService.getAllUsers());
-        return "admin/dashboard";
+        model.addAttribute("pageTitle", "Admin Dashboard");
+        model.addAttribute("contentPage", "admin/dashboard.jsp");
+        return "layout";
     }
 
-    // Edit User Form
     @GetMapping("/edit/{username}")
-    public String editUserForm(@PathVariable String username, Model model, HttpSession session) {
+    public String editForm(@PathVariable String username, HttpSession session, Model model) {
         User currentUser = (User) session.getAttribute("currentUser");
-        if (currentUser == null || currentUser.getRole() != UserRole.TEACHER)
+        if (currentUser == null || currentUser.getRole() != UserRole.TEACHER) {
             return "redirect:/";
-
-        model.addAttribute("user", userService.getAllUsers().stream()
-                .filter(u -> u.getUsername().equals(username))
-                .findFirst().orElse(null));
-        return "admin/edit-user";
+        }
+        model.addAttribute("user", userService.getUserByUsername(username));
+        model.addAttribute("pageTitle", "Edit User");
+        model.addAttribute("contentPage", "admin/edit-user.jsp");
+        return "layout";
     }
 
-    // Update User
     @PostMapping("/update")
-    public String updateUser(@ModelAttribute User user, HttpSession session) {
+    public String updateUser(@ModelAttribute User updatedUser, HttpSession session) {
         User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser != null && currentUser.getRole() == UserRole.TEACHER) {
-            userService.updateUser(user); // Add this method to UserService
+            userService.updateUser(updatedUser);
         }
         return "redirect:/admin";
     }
+
 }

@@ -11,22 +11,28 @@ import java.util.List;
 @Service
 public class CourseService {
     @Autowired
-    private CourseMaterialRepository repository;
+    private CourseMaterialRepository courseMaterialRepository;
 
     public List<CourseMaterial> getAllCourses() {
-        return repository.findAll();
+        return courseMaterialRepository.findAll();
     }
 
     public CourseMaterial getCourseById(Long id) {
-        return repository.findWithID(id);
+        return courseMaterialRepository.findById(id).orElse(null);
     }
 
-    public CourseMaterial saveCourse(CourseMaterial course) {
-        return repository.save(course);
+    public CourseMaterial addCourse(String title, String filePath) {
+        CourseMaterial course = new CourseMaterial();
+        course.setTitle(title);
+        course.setFilePath(filePath);
+        return courseMaterialRepository.save(course);
+    }
+    public CourseMaterial updateCourse(CourseMaterial course) {
+        return courseMaterialRepository.save(course);
     }
 
     public void deleteCourse(Long id) {
-        repository.deleteById(id);
+        courseMaterialRepository.deleteById(id);
     }
-    
+
 }

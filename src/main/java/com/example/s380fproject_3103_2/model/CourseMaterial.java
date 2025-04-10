@@ -13,6 +13,7 @@ public class CourseMaterial {
     private Long id;
 
     private String title;
+    private String description;
     private String filePath; // Store lecture note file path
 
     @OneToMany(mappedBy = "courseMaterial", cascade = CascadeType.ALL)
@@ -32,6 +33,14 @@ public class CourseMaterial {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getFilePath() {

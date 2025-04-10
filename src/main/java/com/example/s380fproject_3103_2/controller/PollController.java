@@ -1,12 +1,18 @@
 package com.example.s380fproject_3103_2.controller;
 
 import com.example.s380fproject_3103_2.model.Poll;
+import com.example.s380fproject_3103_2.model.PollOption;
+import com.example.s380fproject_3103_2.model.User;
+import com.example.s380fproject_3103_2.model.UserRole;
 import com.example.s380fproject_3103_2.service.PollService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/poll")
@@ -40,8 +46,24 @@ public class PollController {
     }
 
     @PostMapping("/add")
-    public String addPollSubmit(@ModelAttribute Poll poll, HttpSession session) {
-        if (session.getAttribute("currentUser") != null) {
+    public String addPollSubmit(
+            @RequestParam String question,
+            @RequestParam String[] optionTexts,
+            HttpSession session) {
+
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser != null && currentUser.getRole() == UserRole.TEACHER) {
+            Poll poll = new Poll();
+            poll.setQuestion(question);
+
+            List<PollOption> options = new ArrayList<>();
+            for (String text : optionTexts) {
+                PollOption option = new PollOption();
+                option.setText(text);
+                option.setPoll(poll);
+                options.add(option);
+            }
+            poll.setOptions(options);
             pollService.addPoll(poll);
         }
         return "redirect:/";
@@ -49,7 +71,8 @@ public class PollController {
 
     @PostMapping("/delete/{id}")
     public String deletePoll(@PathVariable Long id, HttpSession session) {
-        if (session.getAttribute("currentUser") != null) {
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser != null && currentUser.getRole() == UserRole.TEACHER) {
             pollService.deletePoll(id);
         }
         return "redirect:/";

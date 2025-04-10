@@ -6,12 +6,12 @@
     <input type="text" name="question" class="form-control" required>
   </div>
 
-  <h4>Options</h4>
+  <h4>Options (Exactly 4 Required)</h4>
   <div class="mb-3">
-    <input type="text" name="options[0].text" class="form-control mb-2" placeholder="Option 1" required>
-    <input type="text" name="options[1].text" class="form-control mb-2" placeholder="Option 2" required>
-    <input type="text" name="options[2].text" class="form-control mb-2" placeholder="Option 3" required>
-    <input type="text" name="options[3].text" class="form-control mb-2" placeholder="Option 4" required>
+    <input type="text" name="optionTexts" class="form-control mb-2" placeholder="Option 1" required>
+    <input type="text" name="optionTexts" class="form-control mb-2" placeholder="Option 2" required>
+    <input type="text" name="optionTexts" class="form-control mb-2" placeholder="Option 3" required>
+    <input type="text" name="optionTexts" class="form-control mb-2" placeholder="Option 4" required>
   </div>
 
   <button type="submit" class="btn btn-primary">Create Poll</button>

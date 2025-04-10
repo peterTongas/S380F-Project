@@ -1,3 +1,10 @@
+-- Drop tables in reverse order of creation
+DROP TABLE IF EXISTS COMMENTS;
+DROP TABLE IF EXISTS POLL_OPTIONS;
+DROP TABLE IF EXISTS POLLS;
+DROP TABLE IF EXISTS COURSE_MATERIALS;
+DROP TABLE IF EXISTS APP_USERS;
+
 -- User Table (renamed from USER)
 CREATE TABLE IF NOT EXISTS APP_USERS (
                                          username VARCHAR(50) PRIMARY KEY,
@@ -10,9 +17,10 @@ CREATE TABLE IF NOT EXISTS APP_USERS (
 
 -- Course Material Table (renamed for consistency)
 CREATE TABLE IF NOT EXISTS COURSE_MATERIALS (
-                                                id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                                title VARCHAR(200) NOT NULL,
-                                                file_path VARCHAR(500) NOT NULL
+                                  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                  title VARCHAR(200) NOT NULL,
+                                  description TEXT,
+                                  file_path VARCHAR(500) NOT NULL
 );
 
 -- Poll Table (pluralized)

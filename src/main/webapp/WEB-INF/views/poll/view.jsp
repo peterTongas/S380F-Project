@@ -25,6 +25,11 @@
         <div class="card-body">
             <h5 class="card-title">${comment.user.fullName}</h5>
             <p class="card-text">${comment.content}</p>
+            <c:if test="${not empty sessionScope.currentUser && sessionScope.currentUser.role == 'TEACHER'}">
+                <form action="/comment/delete/${comment.id}" method="post">
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                </form>
+            </c:if>
         </div>
     </div>
 </c:forEach>

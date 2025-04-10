@@ -2,7 +2,22 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <h2>${course.title}</h2>
-<a href="${course.filePath}" class="btn btn-primary mb-3">Download Notes</a>
+<a href="/course/download/${course.filePath}" class="btn btn-primary mb-3">
+  <i class="bi bi-download"></i> Download Notes
+</a>
+<div class="card mb-4">
+  <div class="card-body">
+    <h5 class="card-title">Description</h5>
+    <p class="card-text">${course.description}</p>
+
+    <c:if test="${not empty sessionScope.currentUser && sessionScope.currentUser.role == 'TEACHER'}">
+      <a href="/course/edit/${course.id}" class="btn btn-sm btn-warning">
+        <i class="bi bi-pencil"></i> Edit Content
+      </a>
+    </c:if>
+  </div>
+</div>
+
 
 <h3 class="mt-4">Comments</h3>
 <c:forEach items="${course.comments}" var="comment">

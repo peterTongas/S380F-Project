@@ -4,9 +4,10 @@ INSERT INTO APP_USERS (username, password, full_name, email, phone, role) VALUES
                                                                               ('student1', 'password', 'Alice Johnson', 'alice@student.edu', '0987654321', 'STUDENT');
 
 -- Insert Course Materials
-INSERT INTO COURSE_MATERIALS (title, file_path) VALUES
-                                                    ('Introduction to Spring', '/files/lecture1.pdf'),
-                                                    ('Database Design', '/files/lecture2.pdf');
+-- Insert sample data without IDs
+INSERT INTO COURSE_MATERIALS (title, description, file_path) VALUES
+                                                                 ('Introduction to Spring', 'Spring Framework basics', '/files/lecture1.pdf'),
+                                                                 ('Database Design', 'Database principles and patterns', '/files/lecture2.pdf');
 
 -- Insert Polls
 INSERT INTO POLLS (question) VALUES

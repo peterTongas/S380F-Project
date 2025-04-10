@@ -11,7 +11,10 @@
                     <a href="/course/${course.id}" class="btn btn-primary">View Details</a>
                     <c:if test="${not empty sessionScope.currentUser && sessionScope.currentUser.role == 'TEACHER'}">
                         <form action="/course/delete/${course.id}" method="post" class="d-inline">
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            <button type="submit" class="btn btn-danger"
+                                    onclick="return confirm('Delete this course permanently?')">
+                                <i class="bi bi-trash"></i> Delete Course
+                            </button>
                         </form>
                     </c:if>
                 </div>
