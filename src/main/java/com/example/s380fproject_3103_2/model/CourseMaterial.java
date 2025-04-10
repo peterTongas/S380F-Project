@@ -2,6 +2,7 @@ package com.example.s380fproject_3103_2.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,7 +15,10 @@ public class CourseMaterial {
 
     private String title;
     private String description;
-    private String filePath; // Store lecture note file path
+    private String filePath; // Keep for backward compatibility
+
+    @OneToMany(mappedBy = "courseMaterial", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CourseFile> files = new ArrayList<>();
 
     @OneToMany(mappedBy = "courseMaterial", cascade = CascadeType.ALL)
     private List<Comment> comments;
@@ -51,11 +55,29 @@ public class CourseMaterial {
         this.filePath = filePath;
     }
 
+    public List<CourseFile> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<CourseFile> files) {
+        this.files = files;
+    }
+
     public List<Comment> getComments() {
         return comments;
     }
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+    
+    public void addFile(CourseFile file) {
+        files.add(file);
+        file.setCourseMaterial(this);
+    }
+    
+    public void removeFile(CourseFile file) {
+        files.remove(file);
+        file.setCourseMaterial(null);
     }
 }

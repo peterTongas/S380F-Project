@@ -8,6 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -36,6 +38,18 @@ public class FileStorageService {
         } catch (IOException ex) {
             throw new RuntimeException("Could not store file " + fileName, ex);
         }
+    }
+    
+    public List<String> storeFiles(MultipartFile[] files) {
+        List<String> storedFileNames = new ArrayList<>();
+        
+        for (MultipartFile file : files) {
+            if (file != null && !file.isEmpty()) {
+                storedFileNames.add(storeFile(file));
+            }
+        }
+        
+        return storedFileNames;
     }
 
     public Path loadFile(String fileName) {

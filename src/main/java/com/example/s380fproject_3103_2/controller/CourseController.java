@@ -64,17 +64,17 @@ public class CourseController {
         return "layout";
     }
 
-    // Teacher: Submit New Course with File
+    // Teacher: Submit New Course with Files
     @PostMapping("/add")
     public String addCourseSubmit(
             @RequestParam String title,
-            @RequestParam MultipartFile file,
+            @RequestParam(required = false) String description,
+            @RequestParam("files") MultipartFile[] files,
             HttpSession session) {
 
         User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser != null && currentUser.getRole() == UserRole.TEACHER) {
-            String storedFileName = fileStorageService.storeFile(file);
-            courseService.addCourse(title, storedFileName);
+            courseService.addCourseWithFiles(title, description, files);
         }
         return "redirect:/";
     }
@@ -84,11 +84,19 @@ public class CourseController {
     public String deleteCourse(@PathVariable Long id, HttpSession session) {
         User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser != null && currentUser.getRole() == UserRole.TEACHER) {
-            CourseMaterial course = courseService.getCourseById(id);
-            fileStorageService.deleteFile(course.getFilePath());
             courseService.deleteCourse(id);
         }
         return "redirect:/";
+    }
+    
+    // Delete individual course file
+    @PostMapping("/{courseId}/deleteFile/{fileId}")
+    public String deleteFile(@PathVariable Long courseId, @PathVariable Long fileId, HttpSession session) {
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser != null && currentUser.getRole() == UserRole.TEACHER) {
+            courseService.deleteCourseFile(courseId, fileId);
+        }
+        return "redirect:/course/" + courseId;
     }
 
     // Teacher: Edit Course Form
@@ -113,7 +121,7 @@ public class CourseController {
             @PathVariable Long id,
             @RequestParam String title,
             @RequestParam String description,
-            @RequestParam(required = false) MultipartFile file,
+            @RequestParam(required = false) MultipartFile[] files,
             HttpSession session) {
 
         User currentUser = (User) session.getAttribute("currentUser");
@@ -122,15 +130,7 @@ public class CourseController {
             existingCourse.setTitle(title);
             existingCourse.setDescription(description);
 
-            if (file != null && !file.isEmpty()) {
-                // Delete old file
-                fileStorageService.deleteFile(existingCourse.getFilePath());
-                // Store new file
-                String newFilePath = fileStorageService.storeFile(file);
-                existingCourse.setFilePath(newFilePath);
-            }
-
-            courseService.updateCourse(existingCourse);
+            courseService.updateCourseWithFiles(existingCourse, files);
         }
         return "redirect:/course/" + id;
     }

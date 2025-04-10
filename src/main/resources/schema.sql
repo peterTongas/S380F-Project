@@ -1,5 +1,6 @@
 drop table if exists APP_USERS;
 drop table if exists COURSE_MATERIALS;
+drop table if exists COURSE_FILES;
 drop table if exists POLLS;
 drop table if exists POLL_OPTIONS;
 drop table if exists COMMENTS;
@@ -19,8 +20,18 @@ CREATE TABLE IF NOT EXISTS COURSE_MATERIALS (
                                                 id BIGINT AUTO_INCREMENT PRIMARY KEY,
                                                 title VARCHAR(200) NOT NULL,
                                                 description TEXT,
-                                                file_path VARCHAR(500) NOT NULL,
+                                                file_path VARCHAR(500),
                                                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Course Files Table
+CREATE TABLE IF NOT EXISTS COURSE_FILES (
+                                           id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                           file_name VARCHAR(255) NOT NULL,
+                                           file_path VARCHAR(500) NOT NULL,
+                                           file_type VARCHAR(100),
+                                           course_material_id BIGINT,
+                                           FOREIGN KEY (course_material_id) REFERENCES COURSE_MATERIALS(id) ON DELETE CASCADE
 );
 
 -- Polls Table
