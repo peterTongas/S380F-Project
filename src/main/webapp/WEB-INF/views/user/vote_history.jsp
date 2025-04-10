@@ -2,16 +2,16 @@
 prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> <%@ taglib prefix="fmt"
 uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<h2>My Voting History</h2>
+<h2>我的投票歷史</h2>
 
 <c:choose>
   <c:when test="${not empty voteHistory}">
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>Poll Question</th>
-          <th>Your Vote</th>
-          <th>Date</th>
+          <th>投票問題</th>
+          <th>您的選擇</th>
+          <th>日期</th>
         </tr>
       </thead>
       <tbody>
@@ -31,6 +31,6 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
     </table>
   </c:when>
   <c:otherwise>
-    <div class="alert alert-info">You haven't voted on any polls yet.</div>
+    <div class="alert alert-info">您還沒有參與任何投票。</div>
   </c:otherwise>
 </c:choose>

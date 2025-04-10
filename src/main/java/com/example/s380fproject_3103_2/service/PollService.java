@@ -6,6 +6,7 @@ import com.example.s380fproject_3103_2.model.User;
 import com.example.s380fproject_3103_2.repository.PollRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 
@@ -22,12 +23,12 @@ public class PollService {
         return pollRepository.findPollWithOptions(id);
     }
 
-    // 新增方法檢查用戶是否已對特定 poll 投票
+    @Transactional
     public boolean hasUserVotedForPoll(String username, Long pollId) {
         return pollRepository.hasUserVotedForPoll(username, pollId);
     }
 
-    // 更新投票方法，添加用戶參數
+    @Transactional
     public void voteForOption(Long pollId, int optionIndex, User user) {
         // 檢查使用者是否已經投過票
         if (user == null || hasUserVotedForPoll(user.getUsername(), pollId)) {

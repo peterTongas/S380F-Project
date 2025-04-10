@@ -43,7 +43,10 @@ public class PollController {
     public String vote(@PathVariable Long pollId, @RequestParam int optionIndex, HttpSession session) {
         User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser != null) {
-            pollService.voteForOption(pollId, optionIndex, currentUser);
+            // 檢查用戶是否已投票
+            if (!pollService.hasUserVotedForPoll(currentUser.getUsername(), pollId)) {
+                pollService.voteForOption(pollId, optionIndex, currentUser);
+            }
         }
         return "redirect:/poll/" + pollId;
     }

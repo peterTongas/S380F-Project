@@ -12,8 +12,8 @@ public interface PollRepository extends JpaRepository<Poll, Long> {
     @Query("SELECT p FROM Poll p LEFT JOIN FETCH p.options WHERE p.id = :id")
     Poll findPollWithOptions(@Param("id") Long id);
 
-    @Query("SELECT new map(p.question as question, o.text as selectedOption, p.createdAt as voteDate) " +
-            "FROM Poll p JOIN p.options o JOIN o.votes v " +
+    @Query("SELECT new map(p.question as question, o.text as selectedOption, o.poll.createdAt as voteDate) " +
+            "FROM PollOption o JOIN o.votes v JOIN o.poll p " +
             "WHERE v.username = :username " +
             "ORDER BY p.createdAt DESC")
     List<Map<String, Object>> findVoteHistoryByUsername(@Param("username") String username);
