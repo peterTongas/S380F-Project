@@ -21,16 +21,30 @@ public class PollController {
     private PollService pollService;
 
     @GetMapping("/{id}")
-    public String viewPoll(@PathVariable Long id, Model model) {
-        model.addAttribute("poll", pollService.getPollById(id));
+    public String viewPoll(@PathVariable Long id, Model model, HttpSession session) {
+        Poll poll = pollService.getPollById(id);
+        model.addAttribute("poll", poll);
+        
+        // 檢查用戶是否已經投過票
+        User currentUser = (User) session.getAttribute("currentUser");
+        boolean hasVoted = false;
+        
+        if (currentUser != null) {
+            hasVoted = pollService.hasUserVotedForPoll(currentUser.getUsername(), id);
+            model.addAttribute("hasVoted", hasVoted);
+        }
+        
         model.addAttribute("pageTitle", "Poll Details");
         model.addAttribute("contentPage", "poll/view.jsp");
         return "layout";
     }
 
     @PostMapping("/vote/{pollId}")
-    public String vote(@PathVariable Long pollId, @RequestParam int optionIndex) {
-        pollService.voteForOption(pollId, optionIndex);
+    public String vote(@PathVariable Long pollId, @RequestParam int optionIndex, HttpSession session) {
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser != null) {
+            pollService.voteForOption(pollId, optionIndex, currentUser);
+        }
         return "redirect:/poll/" + pollId;
     }
 

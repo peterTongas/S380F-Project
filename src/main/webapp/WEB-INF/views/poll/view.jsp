@@ -3,23 +3,46 @@
 
 <h2>${poll.question}</h2>
 
-<form action="/poll/vote/${poll.id}" method="post">
-    <div class="list-group mb-3">
-        <c:forEach items="${poll.options}" var="option" varStatus="loop">
-            <label class="list-group-item">
-                <input class="form-check-input me-1" type="radio"
-                       name="optionIndex" value="${loop.index}">
-                    ${option.text} (Votes: ${option.voteCount})
-            </label>
-        </c:forEach>
-    </div>
+<c:choose>
+    <c:when test="${empty sessionScope.currentUser}">
+        <div class="alert alert-warning">請登入後參與投票</div>
+        <!-- 顯示目前投票結果 -->
+        <div class="list-group mb-3">
+            <c:forEach items="${poll.options}" var="option">
+                <div class="list-group-item">
+                    ${option.text} (票數: ${option.voteCount})
+                </div>
+            </c:forEach>
+        </div>
+    </c:when>
+    <c:when test="${hasVoted}">
+        <div class="alert alert-info">您已經參與過此投票</div>
+        <!-- 顯示投票結果 -->
+        <div class="list-group mb-3">
+            <c:forEach items="${poll.options}" var="option">
+                <div class="list-group-item">
+                    ${option.text} (票數: ${option.voteCount})
+                </div>
+            </c:forEach>
+        </div>
+    </c:when>
+    <c:otherwise>
+        <form action="/poll/vote/${poll.id}" method="post">
+            <div class="list-group mb-3">
+                <c:forEach items="${poll.options}" var="option" varStatus="loop">
+                    <label class="list-group-item">
+                        <input class="form-check-input me-1" type="radio"
+                               name="optionIndex" value="${loop.index}" required>
+                            ${option.text} (票數: ${option.voteCount})
+                    </label>
+                </c:forEach>
+            </div>
+            <button type="submit" class="btn btn-primary">提交投票</button>
+        </form>
+    </c:otherwise>
+</c:choose>
 
-    <c:if test="${not empty sessionScope.currentUser}">
-        <button type="submit" class="btn btn-primary">Submit Vote</button>
-    </c:if>
-</form>
-
-<h3 class="mt-4">Comments</h3>
+<h3 class="mt-4">評論</h3>
 <c:forEach items="${poll.comments}" var="comment">
     <div class="card mb-2">
         <div class="card-body">
@@ -27,7 +50,7 @@
             <p class="card-text">${comment.content}</p>
             <c:if test="${not empty sessionScope.currentUser && sessionScope.currentUser.role == 'TEACHER'}">
                 <form action="/comment/delete/${comment.id}" method="post">
-                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                    <button type="submit" class="btn btn-sm btn-danger">刪除</button>
                 </form>
             </c:if>
         </div>
@@ -39,6 +62,6 @@
         <div class="mb-3">
             <textarea name="content" class="form-control" required></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Add Comment</button>
+        <button type="submit" class="btn btn-primary">新增評論</button>
     </form>
 </c:if>
