@@ -1,0 +1,119 @@
+/**
+ * 課程管理系統自訂樣式
+ */
+
+/* 共用樣式 */
+body {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 卡片樣式增強 */
+.card {
+    border-radius: 0.75rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* 課程卡片樣式 */
+.course-card .card-img-top {
+    height: 180px;
+    object-fit: cover;
+}
+
+.course-card .card-body {
+    min-height: 200px;
+}
+
+/* 投票樣式 */
+.poll-option {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.poll-progress {
+    height: 2.5rem;
+    border-radius: 1.25rem;
+    background-color: rgba(var(--bs-primary-rgb), 0.1);
+}
+
+.poll-progress .progress-bar {
+    border-radius: 1.25rem;
+    transition: width 1s ease;
+}
+
+.poll-option-text {
+    position: absolute;
+    left: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    font-weight: 500;
+}
+
+.poll-option-count {
+    position: absolute;
+    right: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    font-weight: 700;
+}
+
+/* 評論區樣式 */
+.comment-bubble {
+    background-color: rgba(var(--bs-secondary-rgb), 0.1);
+    border-radius: 1rem;
+    padding: 1rem;
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.comment-bubble:after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: -10px;
+    border-width: 10px 10px 0;
+    border-style: solid;
+    border-color: rgba(var(--bs-secondary-rgb), 0.1) transparent transparent;
+    transform: rotate(-45deg);
+}
+
+/* 自訂動畫 */
+.fade-in {
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* 響應式調整 */
+@media (max-width: 768px) {
+    .card-title {
+        font-size: 1.25rem;
+    }
+    
+    .poll-option-text, .poll-option-count {
+        font-size: 0.875rem;
+    }
+}
+
+/* 深色模式增強 */
+[data-bs-theme=dark] .card {
+    background-color: #2b3035;
+}
+
+[data-bs-theme=dark] .comment-bubble {
+    background-color: #2b3035;
+}
+
+[data-bs-theme=dark] .comment-bubble:after {
+    border-color: #2b3035 transparent transparent;
+}
