@@ -51,20 +51,26 @@ public class PollController {
         
         model.addAttribute("poll", poll);
         
-        // Add confirmation message for the delete poll dialog
-        model.addAttribute("confirmDeletePoll", "確定要刪除此投票嗎？");
+        // Add confirmation message for the delete poll dialog with both languages
+        model.addAttribute("confirmDeletePollZh", "確定要刪除此投票嗎？此操作無法撤銷。");
+        model.addAttribute("confirmDeletePoll", "Are you sure you want to delete this poll? This action cannot be undone.");
         
-        // 如果有錯誤參數，添加錯誤消息
+        // 如果有錯誤參數，添加中英文錯誤消息
         if ("noSelection".equals(error)) {
-            model.addAttribute("errorMessage", "請選擇一個選項後再提交投票");
+            model.addAttribute("errorMessageZh", "請選擇一個選項後再提交投票");
+            model.addAttribute("errorMessage", "Please select an option before submitting your vote");
         } else if ("alreadyVoted".equals(error)) {
-            model.addAttribute("errorMessage", "您已經對此投票問題投過票了");
+            model.addAttribute("errorMessageZh", "您已經對此投票問題投過票了");
+            model.addAttribute("errorMessage", "You have already voted on this poll");
         } else if ("invalidOptionText".equals(error)) {
-            model.addAttribute("errorMessage", "無法選擇含有「選項」文字的選項");
+            model.addAttribute("errorMessageZh", "無法選擇含有「選項」文字的選項");
+            model.addAttribute("errorMessage", "Cannot select an option containing the 'Option' text");
         } else if ("processingError".equals(error)) {
-            model.addAttribute("errorMessage", "處理投票時發生錯誤，請稍後再試");
+            model.addAttribute("errorMessageZh", "處理投票時發生錯誤，請稍後再試");
+            model.addAttribute("errorMessage", "An error occurred while processing your vote, please try again later");
         } else if ("invalidOption".equals(error)) {
-            model.addAttribute("errorMessage", "選擇的選項無效");
+            model.addAttribute("errorMessageZh", "選擇的選項無效");
+            model.addAttribute("errorMessage", "The selected option is invalid");
         }
         
         // 檢查當前用戶是否已對該問題投票

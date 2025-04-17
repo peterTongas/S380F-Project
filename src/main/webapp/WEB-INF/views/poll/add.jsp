@@ -39,12 +39,6 @@
             </div>
             
             <div class="mb-4">
-                <button type="button" class="btn btn-outline-secondary" id="addOption">
-                    <i class="fas fa-plus me-2"></i><span data-i18n="addMoreOptions">新增更多選項</span>
-                </button>
-            </div>
-            
-            <div class="mb-4">
                 <label for="endDate" class="form-label"><span data-i18n="endDate">結束日期</span></label>
                 <input type="datetime-local" class="form-control" id="endDate" name="endDate" required>
                 <div class="form-text"><span data-i18n="endDateHint">設定投票的結束時間</span></div>
@@ -64,38 +58,6 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // 添加更多選項的功能
-    const optionsContainer = document.getElementById('optionsContainer');
-    const addOptionBtn = document.getElementById('addOption');
-    
-    addOptionBtn.addEventListener('click', function() {
-        const optionCount = optionsContainer.children.length + 1;
-        const newOption = document.createElement('div');
-        newOption.className = 'mb-3';
-        newOption.innerHTML = `
-            <label class="form-label"><span data-i18n="option">選項</span> ${optionCount}</label>
-            <input type="text" class="form-control" name="optionTexts" 
-                   placeholder="Enter option..." data-i18n-placeholder="enterOption" required>
-        `;
-        optionsContainer.appendChild(newOption);
-        
-        // 添加刪除選項的功能
-        const removeBtn = newOption.querySelector('.remove-option');
-        removeBtn.addEventListener('click', function() {
-            optionsContainer.removeChild(newOption);
-            updateOptionNumbers();
-        });
-    });
-    
-    // 更新選項編號
-    function updateOptionNumbers() {
-        const options = optionsContainer.children;
-        for (let i = 0; i < options.length; i++) {
-            const numSpan = options[i].querySelector('.input-group-text');
-            const input = options[i].querySelector('input');
-            numSpan.textContent = i + 1;
-            input.placeholder = `選項 ${i + 1}`;
-        }
-    }
+    // No additional functionality needed as we're restricting to exactly 4 options
 });
 </script>

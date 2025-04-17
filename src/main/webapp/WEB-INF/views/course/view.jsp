@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <h2>${course.title}</h2>
 
@@ -69,48 +70,74 @@
 </div>
 
 <!-- 評論區塊 -->
-<h3 class="mt-4"><span data-i18n="commentsSection">Comments</span></h3>
-<c:forEach items="${course.comments}" var="comment">
-  <div class="card mb-2">
+<div class="card shadow-sm">
+    <div class="card-header bg-light">
+        <h3 class="h5 mb-0"><i class="fas fa-comments me-2"></i><span data-i18n="commentsSection">Comments</span></h3>
+    </div>
     <div class="card-body">
-      <h5 class="card-title">${comment.user.fullName}</h5>
-      <p class="card-text">${comment.content}</p>
-      <small class="text-muted">
-          ${comment.createdAt}
-      </small>
-      <c:if test="${not empty sessionScope.currentUser && sessionScope.currentUser.role == 'TEACHER'}">
-        <form action="/comment/delete/${comment.id}" method="post" class="mt-2">
-          <button type="submit" class="btn btn-sm btn-danger">
-            <span data-i18n="deleteComment">刪除評論</span>
-          </button>
-        </form>
-      </c:if>
+        <c:if test="${not empty course.comments}">
+            <div class="mb-4">
+                <c:forEach items="${course.comments}" var="comment">
+                    <div class="d-flex mb-3">
+                        <div class="flex-shrink-0">
+                            <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" 
+                                style="width: 45px; height: 45px;">
+                                ${comment.user.fullName.charAt(0)}
+                            </div>
+                        </div>
+                        <div class="ms-3 flex-grow-1">
+                            <div class="comment-bubble">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="mb-0">${comment.user.fullName}</h6>
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar-alt me-1"></i>
+                                        <span data-i18n="createdAt">建立於</span> <fmt:formatDate value="${comment.createdAt}" pattern="yyyy-MM-dd" />
+                                    </small>
+                                </div>
+                                <p class="mb-0">${comment.content}</p>
+                            </div>
+                            
+                            <c:if test="${sessionScope.currentUser.role == 'TEACHER'}">
+                                <div class="mt-1 text-end">
+                                    <form action="/comment/delete/${comment.id}" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm text-danger border-0 bg-transparent">
+                                            <i class="fas fa-trash-alt"></i> <span data-i18n="delete">刪除</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </c:if>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+        </c:if>
+        
+        <!-- 新增評論表單 -->
+        <c:if test="${not empty sessionScope.currentUser}">
+            <form action="/comment/add/course/${course.id}" method="post">
+                <div class="mb-3">
+                    <label for="content" class="form-label"><span data-i18n="postComment">Post Comment</span></label>
+                    <textarea class="form-control" id="content" name="content" rows="3" placeholder="Write a comment..." data-i18n-placeholder="writeComment" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane me-2"></i><span data-i18n="postComment">Post Comment</span>
+                </button>
+            </form>
+        </c:if>
+        
+        <c:if test="${empty sessionScope.currentUser && empty course.comments}">
+            <div class="text-center py-4">
+                <p class="text-muted mb-0"><span data-i18n="noCommentsYet">目前還沒有評論</span></p>
+            </div>
+        </c:if>
+        
+        <c:if test="${empty sessionScope.currentUser && not empty course.comments}">
+            <div class="alert alert-light mt-3">
+                <i class="fas fa-info-circle me-2"></i><span data-i18n="loginToComment">請</span><a href="/user/login?redirect=/course/${course.id}"><span data-i18n="login">登入</span></a><span data-i18n="afterLoginComment">後參與討論</span>
+            </div>
+        </c:if>
     </div>
-  </div>
-</c:forEach>
-
-<!-- 新增評論表單 -->
-<c:if test="${not empty sessionScope.currentUser}">
-  <form action="/comment/add/course/${course.id}" method="post" class="mt-3">
-    <div class="mb-3">
-      <textarea name="content" class="form-control" placeholder="Write a comment..." data-i18n-placeholder="writeComment" required></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary">
-      <span data-i18n="postComment">發布評論</span>
-    </button>
-  </form>
-</c:if>
-
-<c:if test="${empty sessionScope.currentUser}">
-    <div class="alert alert-light mt-3">
-        <i class="fas fa-info-circle me-2"></i>
-        <span data-i18n="loginToComment">請</span>
-        <a href="/user/login?redirect=/course/${course.id}">
-            <span data-i18n="login">登入</span>
-        </a>
-        <span data-i18n="afterLoginComment">後參與討論</span>
-    </div>
-</c:if>
+</div>
 
 <script>
     const confirmDeleteFileMessage = '確定要刪除此檔案？';

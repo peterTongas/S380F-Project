@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <h1 class="mb-4"><i class="fas fa-book me-2"></i><span data-i18n="allCoursesTitle">所有課程</span></h1>
 
@@ -23,6 +24,12 @@
                     <h5 class="card-title">${course.title}</h5>
                     <p class="card-text text-truncate">${course.description}</p>
                     <div class="d-flex justify-content-between align-items-center mt-3">
+                        <small class="text-body-secondary">
+                            <i class="fas fa-calendar-alt me-1"></i>
+                            <span data-i18n="createdAt">建立於</span> <fmt:formatDate value="${course.createdAt}" pattern="yyyy-MM-dd" />
+                        </small>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-2">
                         <c:if test="${not empty course.courseFiles}">
                             <small class="text-body-secondary">
                                 <i class="fas fa-file me-1"></i>${course.courseFiles.size()} <span data-i18n="filesCount">個檔案</span>

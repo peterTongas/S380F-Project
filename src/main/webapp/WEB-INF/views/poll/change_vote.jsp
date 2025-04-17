@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const selected = this.querySelector('input[name="optionIndex"]:checked');
             if (!selected) {
                 e.preventDefault();
-                alert('請選擇一個選項再提交');
+                alert('請選擇一個選項再提交 / Please select an option before submitting');
                 return false;
             }
         });

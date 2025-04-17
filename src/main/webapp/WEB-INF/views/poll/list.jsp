@@ -35,7 +35,7 @@
                 </div>
                 <div class="card-footer bg-transparent border-top-0">
                     <a href="/poll/${poll.id}" class="btn btn-primary w-100">
-                        <i class="fas fa-vote-yea me-2"></i><span data-i18n="viewPollDetails">View Details</span>
+                        <i class="fas fa-vote-yea me-2"></i><span data-i18n="viewDetails">View Details</span>
                     </a>
                 </div>
             </div>

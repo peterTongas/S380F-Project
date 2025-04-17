@@ -9,7 +9,15 @@
     <div class="card-body">
         <c:if test="${not empty errorMessage}">
             <div class="alert alert-danger" role="alert">
-                <i class="fas fa-exclamation-circle me-2"></i><span data-i18n="errorMessage">${errorMessage}</span>
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <!-- Use the language attribute to determine which message to show -->
+                <span data-i18n="errorMessage">
+                    <script>
+                        document.write(document.documentElement.getAttribute('lang') === 'zh-TW' 
+                            ? '${errorMessageZh}' 
+                            : '${errorMessage}');
+                    </script>
+                </span>
             </div>
         </c:if>
         
@@ -166,12 +174,24 @@
         
         <c:if test="${sessionScope.currentUser.role == 'TEACHER'}">
             <div class="mt-4 d-flex justify-content-end">
-                <form action="/poll/delete/${poll.id}" method="post" onsubmit="return confirm('${confirmDeletePoll}');">
+                <form action="/poll/delete/${poll.id}" method="post" id="deletePollForm">
                     <button type="submit" class="btn btn-danger">
                         <i class="fas fa-trash-alt me-2"></i><span data-i18n="deletePoll">刪除投票</span>
                     </button>
                 </form>
             </div>
+            
+            <!-- Add script to handle language-specific confirmation dialog -->
+            <script>
+                document.getElementById('deletePollForm').onsubmit = function() {
+                    // Use language attribute to determine which confirmation message to show
+                    const isChineseLanguage = document.documentElement.getAttribute('lang') === 'zh-TW';
+                    const confirmMessage = isChineseLanguage 
+                        ? '${confirmDeletePollZh}' 
+                        : '${confirmDeletePoll}';
+                    return confirm(confirmMessage);
+                };
+            </script>
         </c:if>
     </div>
 </div>
@@ -216,7 +236,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const selected = this.querySelector('input[name="optionIndex"]:checked');
             if (!selected) {
                 e.preventDefault();
-                alert('請選擇一個選項再提交');
+                alert('請選擇一個選項再提交 / Please select an option before submitting');
                 return false;
             }
         });
@@ -227,7 +247,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- 評論區 -->
 <div class="card shadow-sm">
     <div class="card-header bg-light">
-        <h3 class="h5 mb-0"><i class="fas fa-comments me-2"></i><span data-i18n="commentsDiscussion">Comments</span></h3>
+        <h3 class="h5 mb-0"><i class="fas fa-comments me-2"></i><span data-i18n="commentsSection">Comments</span></h3>
     </div>
     <div class="card-body">
         <c:if test="${not empty poll.comments}">
