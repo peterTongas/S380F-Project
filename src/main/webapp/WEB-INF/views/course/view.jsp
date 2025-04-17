@@ -2,143 +2,244 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<h2>${course.title}</h2>
-
-<!-- 文件下載區 -->
-<div class="card mb-4">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <span data-i18n="courseFiles">Course Files</span>
-        <!-- 批量下載按鈕 -->
-        <c:if test="${not empty course.courseFiles}">
-            <a href="/course/${course.id}/download-all" class="btn btn-primary btn-sm">
-                <i class="bi bi-download"></i> <span data-i18n="downloadAllFiles">Download All Files</span>
-            </a>
-        </c:if>
-    </div>
-    <div class="card-body">
-        <c:choose>
-            <c:when test="${not empty course.courseFiles}">
-                <ul class="list-group">
-                    <c:forEach items="${course.courseFiles}" var="file">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span>${file.fileName}</span>
-                            <div>
-                                <span class="badge bg-info">${file.fileSize / 1024} <span data-i18n="kb">KB</span></span>
-                                <!-- 單個文件下載按鈕 -->
-                                <a href="/course/download/${file.filePath.substring(file.filePath.lastIndexOf('/') + 1)}" 
-                                   class="btn btn-outline-primary btn-sm ms-2">
-                                    <i class="bi bi-download"></i> <span data-i18n="download">Download</span>
-                                </a>
-                                <c:if test="${sessionScope.currentUser.role == 'TEACHER'}">
-                                    <form style="display: inline;" action="/course/${course.id}/file/delete/${file.id}" method="post">
-                                        <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm(confirmDeleteFileMessage)">
-                                            <i class="bi bi-trash"></i> <span data-i18n="delete">刪除</span>
-                                        </button>
-                                    </form>
-                                </c:if>
-                            </div>
-                        </li>
-                    </c:forEach>
-                </ul>
-            </c:when>
-            <c:otherwise>
-                <p class="text-muted"><span data-i18n="noFiles">此課程暫無檔案</span></p>
-            </c:otherwise>
-        </c:choose>
+<!-- Modern course header with action buttons -->
+<div class="course-header mb-4">
+    <div class="row align-items-center">
+        <div class="col-lg-8 mb-3 mb-lg-0">
+            <h1 class="h2 mb-2 fw-bold">${course.title}</h1>
+            <div class="d-flex align-items-center text-muted flex-wrap">
+                <div class="me-3">
+                    <i class="fas fa-calendar-alt me-1"></i> 
+                    <span data-i18n="createdAt">建立於</span>
+                    <fmt:formatDate value="${course.createdAt}" pattern="yyyy-MM-dd" />
+                </div>
+                <div class="me-3">
+                    <i class="fas fa-file-alt me-1"></i>
+                    <span>${course.courseFiles.size()}</span> <span data-i18n="files">個檔案</span>
+                </div>
+                <div>
+                    <i class="fas fa-comments me-1"></i>
+                    <span>${course.comments.size()}</span> <span data-i18n="comments">條評論</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <c:if test="${not empty sessionScope.currentUser && sessionScope.currentUser.role == 'TEACHER'}">
+                <div class="d-flex flex-wrap justify-content-lg-end gap-2">
+                    <a href="/course/edit/${course.id}" class="btn btn-warning">
+                        <i class="fas fa-pencil-alt me-1"></i> <span data-i18n="editCourse">編輯課程</span>
+                    </a>
+                    <a href="/course/delete/${course.id}" class="btn btn-danger">
+                        <i class="fas fa-trash-alt me-1"></i> <span data-i18n="deleteCourse">刪除課程</span>
+                    </a>
+                </div>
+            </c:if>
+        </div>
     </div>
 </div>
 
-<!-- 課程描述 -->
-<div class="card mb-4">
-  <div class="card-header">
-    <h5 class="card-title mb-0"><span data-i18n="courseDescription">Course Description</span></h5>
-  </div>
-  <div class="card-body">
-    <p class="card-text">${course.description != null ? course.description : '<span data-i18n="noDescription">暫無描述</span>'}</p>
-
-    <c:if test="${not empty sessionScope.currentUser && sessionScope.currentUser.role == 'TEACHER'}">
-      <div class="d-flex mt-3">
-        <a href="/course/edit/${course.id}" class="btn btn-warning me-2">
-          <i class="fas fa-pencil-alt me-1"></i> <span data-i18n="editCourse">編輯課程</span>
-        </a>
-        <a href="/course/delete/${course.id}" class="btn btn-danger">
-          <i class="fas fa-trash-alt me-1"></i> <span data-i18n="deleteCourse">刪除課程</span>
-        </a>
-      </div>
-    </c:if>
-  </div>
+<!-- Course content in card-based layout -->
+<div class="row">
+    <!-- Left column: Description -->
+    <div class="col-lg-7 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h2 class="h5 mb-0"><i class="fas fa-info-circle me-2"></i><span data-i18n="courseDescription">課程描述</span></h2>
+            </div>
+            <div class="card-body">
+                <c:choose>
+                    <c:when test="${not empty course.description}">
+                        <p class="card-text lead">${course.description}</p>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="text-muted text-center py-4 mb-0">
+                            <i class="fas fa-file-alt fa-3x mb-3"></i>
+                            <br><span data-i18n="noDescription">暫無描述</span>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Right column: Files -->
+    <div class="col-lg-5 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h2 class="h5 mb-0"><i class="fas fa-file-alt me-2"></i><span data-i18n="courseFiles">課程檔案</span></h2>
+            </div>
+            <div class="card-body">
+                <c:choose>
+                    <c:when test="${not empty course.courseFiles}">
+                        <div class="list-group list-group-flush">
+                            <c:forEach items="${course.courseFiles}" var="file">
+                                <div class="list-group-item list-group-item-action border-0 px-0 d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center">
+                                        <div class="file-icon me-3 rounded bg-light">
+                                            <c:choose>
+                                                <c:when test="${file.fileName.toLowerCase().endsWith('.pdf')}">
+                                                    <i class="fas fa-file-pdf text-danger"></i>
+                                                </c:when>
+                                                <c:when test="${file.fileName.toLowerCase().endsWith('.doc') || file.fileName.toLowerCase().endsWith('.docx')}">
+                                                    <i class="fas fa-file-word text-primary"></i>
+                                                </c:when>
+                                                <c:when test="${file.fileName.toLowerCase().endsWith('.ppt') || file.fileName.toLowerCase().endsWith('.pptx')}">
+                                                    <i class="fas fa-file-powerpoint text-warning"></i>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <i class="fas fa-file text-secondary"></i>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </div>
+                                        <div>
+                                            <span class="d-block mb-1">${file.fileName}</span>
+                                            <small class="text-muted">
+                                                <c:choose>
+                                                    <c:when test="${file.fileSize < 1024}">
+                                                        ${file.fileSize} B
+                                                    </c:when>
+                                                    <c:when test="${file.fileSize < 1024 * 1024}">
+                                                        <fmt:formatNumber value="${file.fileSize / 1024}" maxFractionDigits="1" /> KB
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <fmt:formatNumber value="${file.fileSize / 1024 / 1024}" maxFractionDigits="1" /> MB
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <a href="/course/download/${file.filePath}" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-download me-1"></i><span data-i18n="download">下載</span>
+                                    </a>
+                                </div>
+                            </c:forEach>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="text-muted text-center py-4 mb-0">
+                            <i class="fas fa-folder-open fa-3x mb-3"></i>
+                            <br><span data-i18n="noFiles">這個課程暫時沒有檔案</span>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- 評論區塊 -->
-<div class="card shadow-sm">
-    <div class="card-header bg-light">
-        <h3 class="h5 mb-0"><i class="fas fa-comments me-2"></i><span data-i18n="commentsSection">Comments</span></h3>
+<!-- Comments section with improved styling -->
+<div class="card shadow-sm mt-3">
+    <div class="card-header">
+        <h2 class="h5 mb-0">
+            <i class="fas fa-comments me-2"></i>
+            <span data-i18n="commentsSection">評論區</span>
+            <span class="badge rounded-pill bg-primary ms-2">${course.comments.size()}</span>
+        </h2>
     </div>
     <div class="card-body">
-        <c:if test="${not empty course.comments}">
-            <div class="mb-4">
-                <c:forEach items="${course.comments}" var="comment">
+        <!-- New comment form -->
+        <c:if test="${not empty sessionScope.currentUser}">
+            <div class="mb-4 fade-in">
+                <form action="/comment/add/course/${course.id}" method="post" id="commentForm">
                     <div class="d-flex mb-3">
                         <div class="flex-shrink-0">
                             <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" 
                                 style="width: 45px; height: 45px;">
-                                ${comment.user.fullName.charAt(0)}
+                                ${sessionScope.currentUser.fullName.charAt(0)}
                             </div>
                         </div>
                         <div class="ms-3 flex-grow-1">
-                            <div class="comment-bubble">
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <h6 class="mb-0">${comment.user.fullName}</h6>
-                                    <small class="text-muted">
-                                        <i class="fas fa-calendar-alt me-1"></i>
-                                        <span data-i18n="createdAt">建立於</span> <fmt:formatDate value="${comment.createdAt}" pattern="yyyy-MM-dd" />
-                                    </small>
-                                </div>
-                                <p class="mb-0">${comment.content}</p>
+                            <div class="form-floating">
+                                <textarea class="form-control" id="content" name="content" 
+                                          style="height: 100px; border-radius: 1rem;" 
+                                          placeholder="Write a comment..." data-i18n-placeholder="writeComment" required></textarea>
+                                <label for="content"><span data-i18n="writeComment">輸入評論...</span></label>
                             </div>
-                            
-                            <c:if test="${sessionScope.currentUser.role == 'TEACHER'}">
-                                <div class="mt-1 text-end">
-                                    <form action="/comment/delete/${comment.id}" method="post" class="d-inline">
-                                        <button type="submit" class="btn btn-sm text-danger border-0 bg-transparent">
-                                            <i class="fas fa-trash-alt"></i> <span data-i18n="delete">刪除</span>
-                                        </button>
-                                    </form>
-                                </div>
-                            </c:if>
+                            <div class="text-end mt-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane me-2"></i><span data-i18n="postComment">發表評論</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </c:forEach>
+                </form>
             </div>
+            <hr class="my-4">
         </c:if>
         
-        <!-- 新增評論表單 -->
-        <c:if test="${not empty sessionScope.currentUser}">
-            <form action="/comment/add/course/${course.id}" method="post">
-                <div class="mb-3">
-                    <label for="content" class="form-label"><span data-i18n="postComment">Post Comment</span></label>
-                    <textarea class="form-control" id="content" name="content" rows="3" placeholder="Write a comment..." data-i18n-placeholder="writeComment" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-paper-plane me-2"></i><span data-i18n="postComment">Post Comment</span>
-                </button>
-            </form>
-        </c:if>
-        
-        <c:if test="${empty sessionScope.currentUser && empty course.comments}">
-            <div class="text-center py-4">
-                <p class="text-muted mb-0"><span data-i18n="noCommentsYet">目前還沒有評論</span></p>
-            </div>
-        </c:if>
-        
-        <c:if test="${empty sessionScope.currentUser && not empty course.comments}">
-            <div class="alert alert-light mt-3">
-                <i class="fas fa-info-circle me-2"></i><span data-i18n="loginToComment">請</span><a href="/user/login?redirect=/course/${course.id}"><span data-i18n="login">登入</span></a><span data-i18n="afterLoginComment">後參與討論</span>
-            </div>
-        </c:if>
+        <!-- Comments listing -->
+        <div id="comments-list">
+            <c:choose>
+                <c:when test="${not empty course.comments}">
+                    <c:forEach items="${course.comments}" var="comment">
+                        <div class="d-flex mb-4 comment-item fade-in">
+                            <div class="flex-shrink-0">
+                                <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" 
+                                    style="width: 45px; height: 45px;">
+                                    ${comment.user.fullName.charAt(0)}
+                                </div>
+                            </div>
+                            <div class="ms-3 flex-grow-1">
+                                <div class="comment-bubble">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div>
+                                            <h6 class="mb-0 fw-bold">${comment.user.fullName}</h6>
+                                            <small class="text-muted">
+                                                <fmt:formatDate value="${comment.createdAt}" pattern="yyyy-MM-dd HH:mm" />
+                                            </small>
+                                        </div>
+                                        <c:if test="${sessionScope.currentUser.role == 'TEACHER' || sessionScope.currentUser.username == comment.user.username}">
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fas fa-ellipsis-v"></i>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-end">
+                                                    <li>
+                                                        <form action="/comment/delete/${comment.id}" method="post">
+                                                            <button type="submit" class="dropdown-item text-danger">
+                                                                <i class="fas fa-trash-alt me-2"></i><span data-i18n="delete">刪除</span>
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </c:if>
+                                    </div>
+                                    <p class="mb-0">${comment.content}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </c:when>
+                <c:otherwise>
+                    <div class="text-center py-5">
+                        <i class="fas fa-comments fa-3x text-muted mb-3"></i>
+                        <p class="lead text-muted" data-i18n="noCommentsYet">目前還沒有評論，成為第一個留言的人吧！</p>
+                    </div>
+                </c:otherwise>
+            </c:choose>
+        </div>
     </div>
 </div>
 
+<!-- Return to list button -->
+<div class="mt-4 text-center">
+    <a href="/course/list" class="btn btn-outline-primary">
+        <i class="fas fa-arrow-left me-2"></i><span data-i18n="backToCourseList">返回課程列表</span>
+    </a>
+</div>
+
+<!-- Script for comment form enhancement -->
 <script>
-    const confirmDeleteFileMessage = '確定要刪除此檔案？';
+    document.addEventListener('DOMContentLoaded', function() {
+        const commentForm = document.getElementById('commentForm');
+        if (commentForm) {
+            commentForm.addEventListener('submit', function() {
+                // Add loading state
+                const submitBtn = this.querySelector('button[type="submit"]');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> 發送中...';
+            });
+        }
+    });
 </script>

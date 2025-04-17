@@ -124,7 +124,7 @@
                                                ${poll.userVotedOptionId == option.id ? 'checked' : ''}
                                                ${changeVoteMode ? '' : (hasVoted ? 'disabled' : '')}>
                                         <label class="form-check-label w-100" for="option${loop.index}" style="cursor: pointer;">
-                                            ${option.text} <span class="text-muted">(${option.voteCount} votes)</span>
+                                            ${option.text} <span class="text-muted">(${option.voteCount} <span data-i18n="votes">votes</span>)</span>
                                         </label>
                                     </div>
                                 </c:when>
@@ -134,7 +134,7 @@
                                         <input class="form-check-input" type="radio" name="optionIndex"
                                                id="option${loop.index}" value="${loop.index}" disabled>
                                         <label class="form-check-label text-muted" for="option${loop.index}">
-                                            Option ${loop.index + 1} (Not available) <span class="text-muted">(0 votes)</span>
+                                            Option ${loop.index + 1} (Not available) <span class="text-muted">(0 <span data-i18n="votes">votes</span>)</span>
                                         </label>
                                     </div>
                                 </c:otherwise>

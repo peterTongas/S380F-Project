@@ -6,36 +6,36 @@
 
 <div class="row g-4">
     <c:forEach items="${polls}" var="poll">
-        <div class="col-md-6">
+        <div class="col-md-6 fade-in">
             <div class="card h-100 shadow-sm">
+                <div class="card-header bg-transparent">
+                    <h5 class="card-title mb-0">${poll.question}</h5>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">${poll.question}</h5>
-                    <div class="mt-3">
-                        <c:forEach items="${poll.options}" var="option">
+                    <div>
+                        <c:forEach items="${poll.options}" var="option" varStatus="status">
                             <div class="poll-option">
                                 <div class="poll-progress">
-                                    <div class="progress-bar bg-primary" role="progressbar" 
+                                    <div class="progress-bar ${status.index % 4 == 0 ? 'bg-primary' : status.index % 4 == 1 ? 'bg-success' : status.index % 4 == 2 ? 'bg-warning' : 'bg-info'}" 
+                                         role="progressbar" 
                                          style="width: ${poll.totalVotes > 0 ? (option.voteCount * 100 / poll.totalVotes) : 0}%" 
                                          aria-valuenow="${option.voteCount}" aria-valuemin="0" 
                                          aria-valuemax="${poll.totalVotes}">
                                     </div>
-                                    <span class="poll-option-text">${option.text}</span>
-                                    <span class="poll-option-count">${option.voteCount} <span data-i18n="votes">票</span></span>
                                 </div>
+                                <span class="poll-option-text">${option.text}</span>
+                                <span class="poll-option-count">${option.voteCount} <span data-i18n="votes">票</span></span>
                             </div>
                         </c:forEach>
                     </div>
-                    <div class="mt-3 text-muted">
-                        <small><i class="fas fa-calendar-alt me-1"></i>
-                            <span data-i18n="createdAt">建立於</span> <fmt:formatDate value="${poll.createdAt}" pattern="yyyy-MM-dd HH:mm" />
-                        </small>
-                        <small class="ms-3"><i class="fas fa-comments me-1"></i>${poll.comments.size()} <span data-i18n="commentsCount">條評論</span></small>
-                        <small class="ms-3"><i class="fas fa-chart-bar me-1"></i>${poll.totalVotes} <span data-i18n="totalVotes">總票數</span></small>
+                    <div class="d-flex justify-content-between align-items-center mt-3 text-muted">
+                        <small><i class="fas fa-users me-1"></i>${poll.totalVotes} <span data-i18n="totalVotes">總票數</span></small>
+                        <small><i class="fas fa-comments me-1"></i>${poll.comments.size()} <span data-i18n="commentsCount">條評論</span></small>
                     </div>
                 </div>
-                <div class="card-footer bg-transparent border-top-0">
+                <div class="card-footer bg-transparent">
                     <a href="/poll/${poll.id}" class="btn btn-primary w-100">
-                        <i class="fas fa-vote-yea me-2"></i><span data-i18n="viewDetails">View Details</span>
+                        <i class="fas fa-vote-yea me-2"></i><span data-i18n="viewDetails">查看詳情</span>
                     </a>
                 </div>
             </div>

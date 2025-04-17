@@ -55,3 +55,11 @@
         <i class="fas fa-info-circle me-2"></i><span data-i18n="noCoursesYet">目前還沒有任何課程。</span>
     </div>
 </c:if>
+
+<c:if test="${not empty sessionScope.currentUser && sessionScope.currentUser.role == 'TEACHER'}">
+    <div class="mt-4">
+        <a href="/course/add" class="btn btn-success">
+            <i class="fas fa-plus-circle me-2"></i><span data-i18n="createNewCourse">建立新課程</span>
+        </a>
+    </div>
+</c:if>
