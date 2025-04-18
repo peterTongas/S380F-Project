@@ -1,0 +1,16 @@
+2025-04-04 17:38:14.352652+08:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "COURSE_MATERIAL" not found (this database is empty); SQL statement:
+select cm1_0.id,cm1_0.file_path,cm1_0.title from course_material cm1_0 [42104-232]
+2025-04-04 17:38:15.810876+08:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "COURSE_MATERIAL" not found (this database is empty); SQL statement:
+select cm1_0.id,cm1_0.file_path,cm1_0.title from course_material cm1_0 [42104-232]
+2025-04-04 17:39:33.899607+08:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "COURSE_MATERIAL" not found (this database is empty); SQL statement:
+select cm1_0.id,cm1_0.file_path,cm1_0.title from course_material cm1_0 [42104-232]
+2025-04-04 17:40:13.372458+08:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "select u1_0.username,u1_0.email,u1_0.full_name,u1_0.password,u1_0.phone,u1_0.role from [*]user u1_0 where u1_0.username=?"; expected "identifier"; SQL statement:
+select u1_0.username,u1_0.email,u1_0.full_name,u1_0.password,u1_0.phone,u1_0.role from user u1_0 where u1_0.username=? [42001-232]
+2025-04-04 17:41:28.302405+08:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "INSERT INTO [*]USER (username, password, full_name, email, phone, role) \000d\000aVALUES ('teacher1', 'pass', 'John Doe', 'teacher@school.com', '123456', 'TEACHER')"; expected "identifier"; SQL statement:
+INSERT INTO USER (username, password, full_name, email, phone, role) 
+VALUES ('teacher1', 'pass', 'John Doe', 'teacher@school.com', '123456', 'TEACHER') [42001-232]

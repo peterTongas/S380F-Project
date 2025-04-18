@@ -1,0 +1,19 @@
+# Database Integration with JPA
+
+## Relational Database Concepts
+- Tables, relationships, and normalization
+- SQL fundamentals and advanced queries
+- Transaction management
+- Indexing and optimization
+
+## Java Persistence API (JPA)
+- Entity mapping
+- Relationships (One-to-One, One-to-Many, Many-to-Many)
+- JPQL and native queries
+- Cascade operations
+
+## Spring Data JPA
+- Repository pattern
+- Query methods
+- Pagination and sorting
+- Auditing and versioning

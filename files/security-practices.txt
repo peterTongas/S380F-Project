@@ -1,0 +1,19 @@
+# Security Best Practices
+
+## Authentication
+- Username/password security
+- Multi-factor authentication
+- OAuth and OpenID Connect
+- JWT tokens and session management
+
+## Authorization
+- Role-based access control
+- Permission systems
+- Method-level security
+- Resource protection
+
+## Common Security Threats
+- SQL Injection prevention
+- Cross-site scripting (XSS)
+- Cross-site request forgery (CSRF)
+- Secure password storage
