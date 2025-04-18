@@ -1,0 +1,19 @@
+# Server-Side Development with Spring Framework
+
+## Spring Core Concepts
+- Dependency Injection
+- Inversion of Control
+- Bean lifecycle management
+- Application contexts
+
+## Spring MVC
+- Controller-based web development
+- Request mapping and handling
+- View resolution
+- Form handling and validation
+
+## RESTful Services
+- API design principles
+- Resource mapping
+- Request/response formats
+- Exception handling

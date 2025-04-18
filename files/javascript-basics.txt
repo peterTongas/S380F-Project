@@ -1,0 +1,19 @@
+# JavaScript Programming
+
+## Core JavaScript Concepts
+- Variables, data types, and operators
+- Functions and scope
+- Objects and arrays
+- Asynchronous programming (Promises, async/await)
+
+## DOM Manipulation
+- Selecting and modifying elements
+- Event handling
+- Creating and removing elements
+- Traversing the DOM
+
+## Modern JavaScript
+- ES6+ features
+- Modules and imports
+- Functional programming concepts
+- Error handling

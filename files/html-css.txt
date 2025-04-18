@@ -1,0 +1,19 @@
+# HTML5 and CSS3 Essentials
+
+## Modern HTML5 Features
+- Semantic elements (header, footer, nav, article)
+- Form improvements and validation
+- Audio and video support
+- Canvas and SVG graphics
+
+## CSS3 Core Concepts
+- Selectors and specificity
+- Box model and layout techniques
+- Flexbox and Grid systems
+- CSS animations and transitions
+
+## Responsive Design
+- Media queries
+- Mobile-first approach
+- Fluid layouts
+- Responsive images

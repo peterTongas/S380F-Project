@@ -91,7 +91,7 @@ body {
 .btn {
   font-weight: 500;
   padding: 0.5rem 1rem;
-  border-radius: var(--border-radius);
+  border-radius: var(--border-radius-pill);
   transition: all var(--transition-fast) ease-in-out;
 }
 
@@ -129,6 +129,25 @@ body {
 
 [data-bs-theme=dark] .btn-icon:hover {
   background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Comment button icon color fix for light/dark mode */
+.btn-icon.btn-sm {
+  background-color: transparent;
+  color: var(--gray-800);
+}
+
+[data-bs-theme=dark] .btn-icon.btn-sm {
+  color: var(--gray-200);
+}
+
+.dropdown .btn-icon {
+  background-color: transparent;
+  color: var(--gray-800);
+}
+
+[data-bs-theme=dark] .dropdown .btn-icon {
+  color: var(--gray-200);
 }
 
 /* Navigation bar styling */
@@ -257,12 +276,40 @@ body {
   position: relative;
 }
 
+.comment-bubble.my-comment {
+  background-color: #dcf8c6;  /* WhatsApp green color for my messages */
+  margin-left: auto;
+}
+
 [data-bs-theme=dark] .comment-bubble {
   background-color: var(--gray-800);
 }
 
+[data-bs-theme=dark] .comment-bubble.my-comment {
+  background-color: #056162;  /* Dark mode WhatsApp green */
+}
+
 .comment-item {
   transition: transform var(--transition-fast);
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.comment-item.my-comment {
+  flex-direction: row-reverse;
+}
+
+.comment-item.my-comment .comment-user-avatar {
+  margin-left: 1rem;
+  margin-right: 0;
+}
+
+.comment-user-avatar {
+  margin-right: 1rem;
+}
+
+.timestamp-right {
+  text-align: right;
 }
 
 /* Make sure poll comments also get dark mode styling */
@@ -325,7 +372,8 @@ body {
 }
 
 [data-bs-theme=dark] .poll-option-text {
-  color: var(--gray-200);
+  color: white;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
 }
 
 .poll-option-count {

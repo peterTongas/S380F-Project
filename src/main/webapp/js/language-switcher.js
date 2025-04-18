@@ -121,6 +121,7 @@ const translations = {
         'confirmDeleteText': '我已了解此操作的風險，並確認要刪除此課程及其所有相關內容。',
         'votingOption': '投票選項',
         'delete': '刪除',
+        'downloadAll': '下載全部',
         'deleteComment': '刪除評論',
         'edit': '編輯',
         'editCourse': '編輯課程',
@@ -179,6 +180,11 @@ const translations = {
         'Profile': '個人資料',
         'UpdateProfile': '更新個人資料',
         'pphone': '電話號碼',
+        'MyCommentHistory': '我的評論歷史',
+        'noCommentHistory': '您尚未發表任何評論。',
+        'ViewCourse': '檢視課程',
+        'ViewPoll': '檢視投票',
+        'backToCourseList': '返回課程列表',
 
     },
     'en': {
@@ -266,6 +272,7 @@ const translations = {
         'confirmDeleteText': 'I understand the risks of this action and confirm that I want to delete this course and all related content.',
         'votingOption': 'Voting Option',
         'delete': 'Delete',
+        'downloadAll': 'Download All',
         'deleteComment': 'Delete Comment',
         'edit': 'Edit',
         'editCourse': 'Edit Course',
@@ -323,5 +330,10 @@ const translations = {
         'Profile': 'Profile',
         'UpdateProfile': 'Update Profile',
         'pphone': 'Phone Number',
+        'MyCommentHistory': 'My Comment History',
+        'noCommentHistory': 'You have not posted any comments yet.',
+        'ViewCourse': 'View Course',
+        'ViewPoll': 'View Poll',
+        'backToCourseList': 'Back to Course List',
     }
 };

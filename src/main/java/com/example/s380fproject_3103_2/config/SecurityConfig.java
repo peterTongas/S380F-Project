@@ -64,6 +64,7 @@ public class SecurityConfig {
                                 "/webjars/**", "/public/**", "/error").permitAll()
                 .requestMatchers("/course/list", "/poll/list", "/course/*/download/**", 
                                 "/course/*/download-all", "/course/download/**").permitAll()
+                .requestMatchers("/files/**", "/course/files/**").permitAll() // Allow access to files
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/WEB-INF/views/**")).permitAll()
                 .anyRequest().authenticated()
             )

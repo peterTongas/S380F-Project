@@ -22,7 +22,7 @@ public class UserVoteHistoryController {
         }
 
         model.addAttribute("voteHistory", pollService.getVoteHistory(currentUser.getUsername()));
-        model.addAttribute("pageTitle", "My Voting History");
+        model.addAttribute("pageTitle", "myVoteHistory");  // Use translation key instead of hardcoded string
         model.addAttribute("contentPage", "user/vote_history.jsp");
         return "layout";
     }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -57,9 +58,14 @@ public class CourseController {
     }
 
     // File Download
-    @GetMapping("/download/{fileName}")
+    @GetMapping("/download/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {
         try {
+            // Remove leading slash if present to avoid path issues
+            if (fileName.startsWith("/")) {
+                fileName = fileName.substring(1);
+            }
+            
             Path filePath = fileStorageService.loadFile(fileName);
             Resource resource = new UrlResource(filePath.toUri());
 
@@ -110,27 +116,30 @@ public class CourseController {
         return "layout";
     }
 
-    // 修改為處理多個文件上傳
+    // 修改為處理多個文件上傳，文件變為可選
     @PostMapping("/add")
     public String addCourseSubmit(
             @RequestParam String title,
             @RequestParam(required = false) String description,
-            @RequestParam("files") List<MultipartFile> files,
+            @RequestParam(value = "files", required = false) List<MultipartFile> files,
             HttpSession session) {
 
         User currentUser = (User) session.getAttribute("currentUser");
-        if (currentUser != null && currentUser.getRole() == UserRole.TEACHER && !files.isEmpty()) {
-            // 過濾空檔案
+        if (currentUser != null && currentUser.getRole() == UserRole.TEACHER) {
+            // 初始化一個空的有效檔案列表
             List<MultipartFile> validFiles = new ArrayList<>();
-            for (MultipartFile file : files) {
-                if (file != null && !file.isEmpty()) {
-                    validFiles.add(file);
+            
+            // 過濾空檔案（如果有提供檔案）
+            if (files != null && !files.isEmpty()) {
+                for (MultipartFile file : files) {
+                    if (file != null && !file.isEmpty()) {
+                        validFiles.add(file);
+                    }
                 }
             }
             
-            if (!validFiles.isEmpty()) {
-                courseService.addCourse(title, description, validFiles);
-            }
+            // 即使沒有檔案，也建立課程
+            courseService.addCourse(title, description, validFiles);
         }
         return "redirect:/";
     }
@@ -248,6 +257,35 @@ public class CourseController {
             courseService.deleteCourseFile(courseId, fileId);
         }
         return "redirect:/course/" + courseId;
+    }
+
+    // Special handler for files in the /files/ directory
+    @GetMapping("/files/{filename:.+}")
+    public ResponseEntity<Resource> serveFileFromFilesDirectory(@PathVariable String filename) {
+        try {
+            // Create a path to the actual file in the project's files directory
+            Path filePath = Paths.get("files", filename).toAbsolutePath().normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (resource.exists()) {
+                String contentType = "application/octet-stream";
+                
+                if (filename.toLowerCase().endsWith(".pdf")) {
+                    contentType = "application/pdf";
+                } else if (filename.toLowerCase().endsWith(".txt")) {
+                    contentType = "text/plain";
+                }
+                
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_TYPE, contentType)
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                        .body(resource);
+            } else {
+                throw new RuntimeException("File not found: " + filename);
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException("Error serving file: " + filename, ex);
+        }
     }
 
     // 輔助方法

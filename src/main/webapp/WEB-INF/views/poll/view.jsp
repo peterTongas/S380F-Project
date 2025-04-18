@@ -253,15 +253,15 @@ document.addEventListener('DOMContentLoaded', function() {
         <c:if test="${not empty poll.comments}">
             <div class="mb-4">
                 <c:forEach items="${poll.comments}" var="comment">
-                    <div class="d-flex mb-3">
-                        <div class="flex-shrink-0">
+                    <div class="d-flex ${sessionScope.currentUser.username == comment.user.username ? 'comment-item my-comment' : 'comment-item'}">
+                        <div class="flex-shrink-0 comment-user-avatar">
                             <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" 
                                 style="width: 45px; height: 45px;">
                                 ${comment.user.fullName.charAt(0)}
                             </div>
                         </div>
-                        <div class="ms-3 flex-grow-1">
-                            <div class="comment-bubble">
+                        <div class="flex-grow-1">
+                            <div class="comment-bubble ${sessionScope.currentUser.username == comment.user.username ? 'my-comment' : ''}">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <h6 class="mb-0">${comment.user.fullName}</h6>
                                     <small class="text-muted">
@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <p class="mb-0">${comment.content}</p>
                             </div>
                             
-                            <c:if test="${sessionScope.currentUser.role == 'TEACHER'}">
+                            <c:if test="${sessionScope.currentUser.role == 'TEACHER' || sessionScope.currentUser.username == comment.user.username}">
                                 <div class="mt-1 text-end">
                                     <form action="/comment/delete/${comment.id}" method="post" class="d-inline">
                                         <button type="submit" class="btn btn-sm text-danger border-0 bg-transparent">

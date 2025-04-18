@@ -247,3 +247,44 @@
         </div>
     </div>
 </c:if>
+
+<!-- Make cards clickable script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Make course cards clickable
+        const courseCards = document.querySelectorAll('.course-card');
+        courseCards.forEach(card => {
+            card.style.cursor = 'pointer'; // Change cursor to pointer to indicate clickable
+            card.addEventListener('click', function(e) {
+                // Don't trigger if clicking on a button or link inside the card
+                if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A' || 
+                    e.target.closest('button') || e.target.closest('a')) {
+                    return;
+                }
+                // Get the link from the card footer
+                const link = this.querySelector('.card-footer a');
+                if (link) {
+                    window.location.href = link.getAttribute('href');
+                }
+            });
+        });
+        
+        // Also make poll cards clickable using the same logic
+        const pollCards = document.querySelectorAll('.card:not(.course-card)');
+        pollCards.forEach(card => {
+            // Only apply to cards with a footer link
+            const link = card.querySelector('.card-footer a');
+            if (!link) return;
+            
+            card.style.cursor = 'pointer';
+            card.addEventListener('click', function(e) {
+                if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A' || 
+                    e.target.closest('button') || e.target.closest('a')) {
+                    return;
+                }
+                
+                window.location.href = link.getAttribute('href');
+            });
+        });
+    });
+</script>

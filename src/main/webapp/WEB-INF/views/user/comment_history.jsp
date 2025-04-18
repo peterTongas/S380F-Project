@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<h2>My Comment History</h2>
+<h2><span data-i18n="MyCommentHistory" >My Comment History</span></h2>
 
 <c:choose>
   <c:when test="${not empty comments}">
@@ -26,20 +26,16 @@
           </div>
           <p class="mb-1">${comment.content}</p>
           <c:if test="${not empty comment.courseMaterial}">
-            <a href="/course/${comment.courseMaterial.id}" class="btn btn-sm btn-outline-primary">
-              View Course
-            </a>
+            <a href="/course/${comment.courseMaterial.id}" class="btn btn-sm btn-outline-primary"><span data-i18n="ViewCourse">View Course</span></a>
           </c:if>
           <c:if test="${not empty comment.poll}">
-            <a href="/poll/${comment.poll.id}" class="btn btn-sm btn-outline-primary">
-              View Poll
-            </a>
+            <a href="/poll/${comment.poll.id}" class="btn btn-sm btn-outline-primary"><spam data-i18n="ViewPoll">View Poll</spam></a>
           </c:if>
         </div>
       </c:forEach>
     </div>
   </c:when>
   <c:otherwise>
-    <div class="alert alert-info">You haven't posted any comments yet.</div>
+    <div class="alert alert-info"><span data-i18n="noCommentHistory">You haven't posted any comments yet.</span></div>
   </c:otherwise>
 </c:choose>

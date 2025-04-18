@@ -12,7 +12,7 @@
     </div>
     <div class="mb-3">
         <label class="form-label"><span data-i18n="LectureNotes">Notes (PDFs, Documents, etc.)</span></label>
-        <input type="file" name="files" multiple class="form-control" accept=".pdf,.doc,.docx,.ppt,.pptx" required>
+        <input type="file" name="files" multiple class="form-control" accept=".pdf,.doc,.docx,.ppt,.pptx">
         <small class="text-muted"><span data-i18n="multipleFileUpload">您可以一次選擇多個檔案進行上傳。</span></small>
     </div>
     <button type="submit" class="btn btn-primary"><span data-i18n="addCourse">Add Course</span></button>

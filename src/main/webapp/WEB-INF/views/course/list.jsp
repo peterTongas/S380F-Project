@@ -63,3 +63,26 @@
         </a>
     </div>
 </c:if>
+
+<!-- Add card clickability script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Make course cards clickable
+        const courseCards = document.querySelectorAll('.course-card');
+        courseCards.forEach(card => {
+            card.style.cursor = 'pointer'; // Change cursor to pointer to indicate clickable
+            card.addEventListener('click', function(e) {
+                // Don't trigger if clicking on a button or link inside the card
+                if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A' || 
+                    e.target.closest('button') || e.target.closest('a')) {
+                    return;
+                }
+                // Get the link from the card footer
+                const link = this.querySelector('.card-footer a');
+                if (link) {
+                    window.location.href = link.getAttribute('href');
+                }
+            });
+        });
+    });
+</script>

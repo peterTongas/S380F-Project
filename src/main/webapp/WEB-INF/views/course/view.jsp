@@ -67,6 +67,11 @@
         <div class="card h-100 shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h2 class="h5 mb-0"><i class="fas fa-file-alt me-2"></i><span data-i18n="courseFiles">課程檔案</span></h2>
+                <c:if test="${not empty course.courseFiles && course.courseFiles.size() > 0}">
+                    <a href="/course/${course.id}/download-all" class="btn btn-sm btn-success">
+                        <i class="fas fa-download me-1"></i><span data-i18n="downloadAll">下載全部</span>
+                    </a>
+                </c:if>
             </div>
             <div class="card-body">
                 <c:choose>
@@ -172,15 +177,15 @@
             <c:choose>
                 <c:when test="${not empty course.comments}">
                     <c:forEach items="${course.comments}" var="comment">
-                        <div class="d-flex mb-4 comment-item fade-in">
-                            <div class="flex-shrink-0">
+                        <div class="d-flex ${sessionScope.currentUser.username == comment.user.username ? 'comment-item my-comment' : 'comment-item'} fade-in">
+                            <div class="flex-shrink-0 comment-user-avatar">
                                 <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" 
                                     style="width: 45px; height: 45px;">
                                     ${comment.user.fullName.charAt(0)}
                                 </div>
                             </div>
-                            <div class="ms-3 flex-grow-1">
-                                <div class="comment-bubble">
+                            <div class="flex-grow-1">
+                                <div class="comment-bubble ${sessionScope.currentUser.username == comment.user.username ? 'my-comment' : ''}">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
                                         <div>
                                             <h6 class="mb-0 fw-bold">${comment.user.fullName}</h6>
@@ -241,5 +246,28 @@
                 submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> 發送中...';
             });
         }
+
+        // Make cards clickable - adds click event to course cards
+        const makeCardsClickable = function() {
+            const courseCards = document.querySelectorAll('.course-card');
+            courseCards.forEach(card => {
+                card.style.cursor = 'pointer'; // Change cursor to indicate clickable
+                card.addEventListener('click', function(e) {
+                    // Don't trigger if clicking on a button or link inside the card
+                    if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A' || 
+                        e.target.closest('button') || e.target.closest('a')) {
+                        return;
+                    }
+                    // Get the link from the card footer
+                    const link = this.querySelector('.card-footer a');
+                    if (link) {
+                        window.location.href = link.getAttribute('href');
+                    }
+                });
+            });
+        };
+
+        // Call the function to make cards clickable
+        makeCardsClickable();
     });
 </script>
